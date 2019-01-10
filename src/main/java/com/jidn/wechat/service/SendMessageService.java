@@ -42,5 +42,5 @@ public interface SendMessageService {
      * @param mpid
      * @return
      */
-    public String sendMessageNews(String openid,String mpid);
+    public String sendMessageNews(String content,String openid,String mpid);
 }

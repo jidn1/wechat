@@ -8,15 +8,41 @@ package com.jidn.common.util;
  */
 public class WeChatConstants {
 
-    public static final String xzh = "谢自豪";
+    public static final String RedisKey = "zjjWechat";
 
-    public static final String xjj = "辛晶晶";
+    public static final String xzh = "";
 
-    public static final String aj = "阿吉";
+    public static final String xjj = "";
 
-    public static final String xubb = "许彬彬";
+    public static final String aj = "";
 
-    public static final String zhangy = "张宇";
+    public static final String xubb = "";
 
-    public static final String xiaok = "肖凯";
+    public static final String zhangy = "";
+
+    public static final String xiaok = "";
+
+    public static final String history = "历史";
+
+    public static final String read = "读书";
+
+    public static final String finance = "财经";
+
+    public static final String entertainment = "娱乐";
+
+    public static final String sport = "体育";
+
+    public static final String military = "军事";
+
+    public static final String hotSpot = "热点";
+
+    public static final String redisNewSport = "体育排行";
+
+    public static final String redisNewMilitary = "军事排行";
+
+    public static final String redisNewEntertainment = "娱乐排行";
+
+    public static final String redisNewHotSpot = "资讯排行";
+
+    public static final String redisNewFinance = "财经排行";
 }

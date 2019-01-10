@@ -21,7 +21,7 @@ public class MsgDispatcher {
 
         if (map.get("MsgType").equals(MessageUtil.REQ_MESSAGE_TYPE_TEXT)) { // 文本消息
             String content=map.get("Content");
-            return sendMessageService.sendMessageByContent(content,openid,mpid);
+            return sendMessageService.sendMessageNews(content,openid,mpid);
         }
 
         if (map.get("MsgType").equals(MessageUtil.REQ_MESSAGE_TYPE_IMAGE)) { // 图片消息

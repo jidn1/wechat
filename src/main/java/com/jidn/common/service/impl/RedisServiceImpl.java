@@ -1,6 +1,7 @@
 package com.jidn.common.service.impl;
 
 import com.jidn.common.service.RedisService;
+import org.springframework.stereotype.Service;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.ShardedJedis;
 import redis.clients.jedis.ShardedJedisPool;

@@ -17,7 +17,7 @@
         </property>
     </bean>
 
-    <!--<bean id="redisService" class="hry.redis.common.utils.impl.RedisServiceImpl"></bean>-->
+    <bean id="redisService" class="com.jidn.common.service.impl.RedisServiceImpl"></bean>
 
     <!-- 构建连接池配置信息 -->
     <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
@@ -25,6 +25,19 @@
         <property name="maxTotal" value="${redis.maxTotal}" />
     </bean>
 
+    <bean id="shardedJedisPool" class="redis.clients.jedis.ShardedJedisPool"
+          destroy-method="close">
+        <constructor-arg index="0" ref="jedisPoolConfig" />
+        <constructor-arg index="1">
+            <list>
+                <bean class="redis.clients.jedis.JedisShardInfo">
+                    <constructor-arg index="0" value="${redis.url}" />
+                    <constructor-arg index="1" value="${redis.port}" />
+                    <property name="password" value="${redis.password}"></property>
+                </bean>
+            </list>
+        </constructor-arg>
+    </bean>
 
     <bean id="jedisPool" class="redis.clients.jedis.JedisPool">
         <constructor-arg name="poolConfig" ref="jedisPoolConfig" />
