@@ -1,8 +1,9 @@
 package com.jidn.wechat.dispatcher;
 
 import com.jidn.common.util.SpringUtil;
+import com.jidn.common.util.WeChatConstants;
 import com.jidn.wechat.service.SendMessageService;
-import com.jidn.wechat.util.MessageUtil;
+import com.jidn.common.util.MessageUtil;
 
 import java.util.Map;
 
@@ -21,7 +22,12 @@ public class MsgDispatcher {
 
         if (map.get("MsgType").equals(MessageUtil.REQ_MESSAGE_TYPE_TEXT)) { // 文本消息
             String content=map.get("Content");
-            return sendMessageService.sendMessageNews(content,openid,mpid);
+            System.out.println(content);
+            if(content.startsWith(WeChatConstants.translate)) {
+                return sendMessageService.sendMessageTranslate(content,openid,mpid);
+            } else {
+                return sendMessageService.sendMessageNews(content,openid,mpid);
+            }
         }
 
         if (map.get("MsgType").equals(MessageUtil.REQ_MESSAGE_TYPE_IMAGE)) { // 图片消息
@@ -41,6 +47,8 @@ public class MsgDispatcher {
         }
 
         if (map.get("MsgType").equals(MessageUtil.REQ_MESSAGE_TYPE_VOICE)) { // 语音消息
+            String recognition=map.get("Recognition");
+            System.out.println("您发送的语音消息："+recognition);
             return sendMessageService.sendMessageText(openid,mpid);
         }
 

@@ -5,7 +5,7 @@ import java.util.*;
 import com.jidn.common.util.SpringUtil;
 import com.jidn.wechat.controller.WechatSecurityController;
 import com.jidn.wechat.service.SendMessageService;
-import com.jidn.wechat.util.MessageUtil;
+import com.jidn.common.util.MessageUtil;
 import org.apache.log4j.Logger;
 
 /**

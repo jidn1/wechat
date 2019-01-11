@@ -22,6 +22,8 @@ public class WeChatConstants {
 
     public static final String xiaok = "";
 
+    public static final String translate = "翻译";
+
     public static final String history = "历史";
 
     public static final String read = "读书";
@@ -45,4 +47,14 @@ public class WeChatConstants {
     public static final String redisNewHotSpot = "资讯排行";
 
     public static final String redisNewFinance = "财经排行";
+
+    public static final String Language_jp = "日语";
+
+    public static final String Language_kor = "韩语";
+
+    public static final String Language_fra = "法语";
+
+    public static final String Language_ru = "俄语";
+
+    public static final String Language_de = "德语";
 }

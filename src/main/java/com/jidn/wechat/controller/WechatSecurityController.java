@@ -8,14 +8,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.jidn.wechat.dispatcher.EventDispatcher;
 import com.jidn.wechat.dispatcher.MsgDispatcher;
-import com.jidn.wechat.util.MessageUtil;
+import com.jidn.common.util.MessageUtil;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.jidn.wechat.util.SignUtil;
+import com.jidn.common.util.SignUtil;
 
 /**
  * @Copyright © 北京互融时代软件有限公司

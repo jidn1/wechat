@@ -43,4 +43,13 @@ public interface SendMessageService {
      * @return
      */
     public String sendMessageNews(String content,String openid,String mpid);
+
+    /**
+     * 文本翻译消息
+     * @param content
+     * @param openid
+     * @param mpid
+     * @return
+     */
+    public String sendMessageTranslate(String content,String openid,String mpid);
 }

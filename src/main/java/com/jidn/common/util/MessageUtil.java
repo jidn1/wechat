@@ -1,4 +1,4 @@
-package com.jidn.wechat.util;
+package com.jidn.common.util;
 
 import java.io.InputStream;
 import java.io.Writer;

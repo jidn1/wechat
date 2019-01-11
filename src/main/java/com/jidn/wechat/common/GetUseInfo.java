@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 import com.alibaba.fastjson.JSONObject;
 import com.jidn.web.util.GlobalConstants;
-import com.jidn.wechat.util.HttpUtils;
+import com.jidn.common.util.HttpUtils;
 
 
 /**

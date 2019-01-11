@@ -2,10 +2,7 @@ package com.jidn.wechat.menu;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.jidn.web.util.GlobalConstants;
-import com.jidn.wechat.util.HttpUtils;
-
-import java.util.HashMap;
+import com.jidn.common.util.HttpUtils;
 
 
 /**

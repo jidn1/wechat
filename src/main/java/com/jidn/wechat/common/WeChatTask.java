@@ -8,7 +8,7 @@ import java.util.Map;
 
 import com.alibaba.fastjson.JSONObject;
 import com.jidn.web.util.GlobalConstants;
-import com.jidn.wechat.util.HttpUtils;
+import com.jidn.common.util.HttpUtils;
 
 /**
  * @Copyright © 北京互融时代软件有限公司

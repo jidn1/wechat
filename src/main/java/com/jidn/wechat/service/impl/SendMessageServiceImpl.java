@@ -1,15 +1,15 @@
 package com.jidn.wechat.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.jidn.common.baidu.translate.TransApi;
 import com.jidn.common.service.RedisService;
 import com.jidn.common.util.WeChatConstants;
 import com.jidn.web.model.News;
 import com.jidn.web.util.GlobalConstants;
-import com.jidn.wechat.common.GetUseInfo;
 import com.jidn.wechat.message.resp.*;
 import com.jidn.wechat.service.SendMessageService;
-import com.jidn.wechat.util.HttpPostUploadUtil;
-import com.jidn.wechat.util.MessageUtil;
+import com.jidn.common.util.HttpPostUploadUtil;
+import com.jidn.common.util.MessageUtil;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -121,6 +121,32 @@ public class SendMessageServiceImpl implements SendMessageService {
             e.printStackTrace();
         }
         return MessageUtil.newsMessageToXml(newMsg);
+    }
+
+    @Override
+    public String sendMessageTranslate(String content,String openid, String mpid) {
+        TextMessage txtMsg=new TextMessage();
+        try {
+            TransApi api = new TransApi(GlobalConstants.getInterfaceUrl("baiduApi"), GlobalConstants.getInterfaceUrl("baiduSecurityKey"));
+            String  content_result = api.getTransResult(content.substring(3), "en");
+            char [] content_result_temp = content_result.toCharArray();
+            content_result = "";
+            for(int i = content_result_temp.length-5;;i--) {
+                if(content_result_temp[i] == '"') {
+                    break;
+                }
+                content_result = content_result_temp[i] + content_result;
+            }
+
+            txtMsg.setToUserName(openid);
+            txtMsg.setFromUserName(mpid);
+            txtMsg.setCreateTime(new Date().getTime());
+            txtMsg.setMsgType(MessageUtil.RESP_MESSAGE_TYPE_TEXT);
+            txtMsg.setContent(content_result);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return MessageUtil.textMessageToXml(txtMsg);
     }
 
 
