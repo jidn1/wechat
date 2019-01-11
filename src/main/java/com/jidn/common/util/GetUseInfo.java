@@ -1,9 +1,9 @@
-package com.jidn.wechat.common;
+package com.jidn.common.util;
 
 import java.util.HashMap;
 
 import com.alibaba.fastjson.JSONObject;
-import com.jidn.web.util.GlobalConstants;
+import com.jidn.common.util.GlobalConstants;
 import com.jidn.common.util.HttpUtils;
 
 

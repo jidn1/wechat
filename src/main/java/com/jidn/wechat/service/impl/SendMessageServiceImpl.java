@@ -5,7 +5,7 @@ import com.jidn.common.baidu.translate.TransApi;
 import com.jidn.common.service.RedisService;
 import com.jidn.common.util.WeChatConstants;
 import com.jidn.web.model.News;
-import com.jidn.web.util.GlobalConstants;
+import com.jidn.common.util.GlobalConstants;
 import com.jidn.wechat.message.resp.*;
 import com.jidn.wechat.service.SendMessageService;
 import com.jidn.common.util.HttpPostUploadUtil;
@@ -128,7 +128,7 @@ public class SendMessageServiceImpl implements SendMessageService {
         TextMessage txtMsg=new TextMessage();
         try {
             TransApi api = new TransApi(GlobalConstants.getInterfaceUrl("baiduApi"), GlobalConstants.getInterfaceUrl("baiduSecurityKey"));
-            String  content_result = api.getTransResult(content.substring(3), "en");
+            String  content_result = api.getTransResult(content.split(":")[1], content);
             char [] content_result_temp = content_result.toCharArray();
             content_result = "";
             for(int i = content_result_temp.length-5;;i--) {
@@ -137,7 +137,6 @@ public class SendMessageServiceImpl implements SendMessageService {
                 }
                 content_result = content_result_temp[i] + content_result;
             }
-
             txtMsg.setToUserName(openid);
             txtMsg.setFromUserName(mpid);
             txtMsg.setCreateTime(new Date().getTime());

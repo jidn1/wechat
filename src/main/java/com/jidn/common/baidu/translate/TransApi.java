@@ -48,7 +48,7 @@ public class TransApi {
         String toLan = "";
         try{
             if(ifHasLan.length() >= 4){
-                String Language = ifHasLan.substring(3,5);
+                String Language = ifHasLan.substring(2,4);
                 if(WeChatConstants.Language_jp.equals(Language)){
                     toLan = "jp";
                 } else if(WeChatConstants.Language_kor.equals(Language)){
@@ -59,6 +59,8 @@ public class TransApi {
                     toLan = "ru";
                 } else if(WeChatConstants.Language_de.equals(Language)){
                     toLan = "de";
+                } else if(WeChatConstants.Language_en.equals(Language)){
+                    toLan = "en";
                 }
             } else {
                 toLan = "en";
@@ -73,17 +75,22 @@ public class TransApi {
 
 
     public static void main(String[] args) {
-        String APP_ID = "20190111000256167";
-        String SECURITY_KEY = "Vk06GyVtmEWgLkZyx6b8";
+        String APP_ID = "";
+        String SECURITY_KEY = "";
         TransApi api = new TransApi(APP_ID, SECURITY_KEY);
         try {
-            String query = "人生一直是如此痛苦";
-            String transResult = api.getTransResult(query, "jp");
-            String res = new String(transResult.getBytes(), "UTF-8");
-            System.out.println(res);
+            String query = "翻译韩语:生活一直是如此痛苦";
+            String str = query.split(":")[1];
+            String transResult = api.getTransResult(str, query);
+            String res = new String(transResult.getBytes("US-ASCII"), "gbk");
+
+            System.out.println(transResult);
         } catch (Exception e){
             e.printStackTrace();
         }
     }
+
+
+
 
 }

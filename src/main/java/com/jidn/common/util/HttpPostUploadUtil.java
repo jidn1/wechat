@@ -13,7 +13,6 @@ import java.util.Iterator;
 import java.util.Map;
 
 import javax.activation.MimetypesFileTypeMap;
-import com.jidn.web.util.GlobalConstants;
 
 /**
  * @Copyright © 北京互融时代软件有限公司

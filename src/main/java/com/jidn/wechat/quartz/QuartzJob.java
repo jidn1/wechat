@@ -2,7 +2,7 @@ package com.jidn.wechat.quartz;
 
 import org.apache.log4j.Logger;
 
-import com.jidn.wechat.common.WeChatTask;
+import com.jidn.wechat.quartz.job.WeChatTask;
 
 /**
  * @Copyright © 北京互融时代软件有限公司

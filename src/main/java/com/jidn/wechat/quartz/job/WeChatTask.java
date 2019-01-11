@@ -1,4 +1,4 @@
-package com.jidn.wechat.common;
+package com.jidn.wechat.quartz.job;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -7,7 +7,7 @@ import java.util.Map;
 
 
 import com.alibaba.fastjson.JSONObject;
-import com.jidn.web.util.GlobalConstants;
+import com.jidn.common.util.GlobalConstants;
 import com.jidn.common.util.HttpUtils;
 
 /**

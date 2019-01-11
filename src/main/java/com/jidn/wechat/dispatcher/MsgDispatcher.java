@@ -48,8 +48,11 @@ public class MsgDispatcher {
 
         if (map.get("MsgType").equals(MessageUtil.REQ_MESSAGE_TYPE_VOICE)) { // 语音消息
             String recognition=map.get("Recognition");
-            System.out.println("您发送的语音消息："+recognition);
-            return sendMessageService.sendMessageText(openid,mpid);
+            if(recognition.startsWith(WeChatConstants.translate)) {
+                return sendMessageService.sendMessageTranslate(recognition,openid,mpid);
+            } else {
+                return sendMessageService.sendMessageNews(recognition,openid,mpid);
+            }
         }
 
         return null;

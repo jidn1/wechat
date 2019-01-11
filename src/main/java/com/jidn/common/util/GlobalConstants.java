@@ -1,4 +1,4 @@
-package com.jidn.web.util;
+package com.jidn.common.util;
 
 import java.util.Properties;
 /**

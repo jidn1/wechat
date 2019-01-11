@@ -286,7 +286,7 @@ public class HttpUtils {
             close(is); // 关闭数据流
             conn.disconnect(); // 断开连接
 
-            return text;
+            return Native2AsciiUtils.ascii2Native(text);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {

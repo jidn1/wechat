@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import com.jidn.web.util.GlobalConstants;
+import com.jidn.common.util.GlobalConstants;
 
 /**
  * @Copyright © 北京互融时代软件有限公司

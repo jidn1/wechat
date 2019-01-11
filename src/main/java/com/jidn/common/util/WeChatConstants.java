@@ -57,4 +57,6 @@ public class WeChatConstants {
     public static final String Language_ru = "俄语";
 
     public static final String Language_de = "德语";
+
+    public static final String Language_en = "英语";
 }
