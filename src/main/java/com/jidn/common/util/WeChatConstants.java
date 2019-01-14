@@ -10,6 +10,8 @@ public class WeChatConstants {
 
     public static final String RedisKey = "zjjWechat";
 
+    public static final String defaultLanguage = "zjjWechat:defaultLanguage";
+
     public static final String xzh = "";
 
     public static final String xjj = "";
@@ -23,6 +25,8 @@ public class WeChatConstants {
     public static final String xiaok = "";
 
     public static final String translate = "翻译";
+
+    public static final String switchMode = "切换为";
 
     public static final String history = "历史";
 

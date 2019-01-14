@@ -195,7 +195,19 @@
       <artifactId>spring-data-redis</artifactId>
       <version>1.6.4.RELEASE</version>
     </dependency>
+    <!--文本转语音-->
+    <dependency>
+      <groupId>com.hynnet</groupId>
+      <artifactId>jacob</artifactId>
+      <version>1.18</version>
+    </dependency>
 
+    <!--baidu SDK-->
+    <dependency>
+      <groupId>com.baidu.aip</groupId>
+      <artifactId>java-sdk</artifactId>
+      <version>4.4.1</version>
+    </dependency>
   </dependencies>
 
 

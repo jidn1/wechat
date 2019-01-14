@@ -73,10 +73,10 @@ public class TransApi {
 
 
 
-
+    //생활은 줄곧 이렇게 고통스럽다
     public static void main(String[] args) {
-        String APP_ID = "";
-        String SECURITY_KEY = "";
+        String APP_ID = "20190111000256167";
+        String SECURITY_KEY = "Vk06GyVtmEWgLkZyx6b8";
         TransApi api = new TransApi(APP_ID, SECURITY_KEY);
         try {
             String query = "翻译韩语:生活一直是如此痛苦";

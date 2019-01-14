@@ -23,8 +23,11 @@ public class MsgDispatcher {
         if (map.get("MsgType").equals(MessageUtil.REQ_MESSAGE_TYPE_TEXT)) { // 文本消息
             String content=map.get("Content");
             System.out.println(content);
+           // return sendMessageService.sendMessageVoice(content,openid,mpid);
             if(content.startsWith(WeChatConstants.translate)) {
                 return sendMessageService.sendMessageTranslate(content,openid,mpid);
+            } else if(content.startsWith(WeChatConstants.switchMode)){
+
             } else {
                 return sendMessageService.sendMessageNews(content,openid,mpid);
             }
@@ -49,6 +52,7 @@ public class MsgDispatcher {
         if (map.get("MsgType").equals(MessageUtil.REQ_MESSAGE_TYPE_VOICE)) { // 语音消息
             String recognition=map.get("Recognition");
 
+
             if(recognition.startsWith(WeChatConstants.translate)) {
                 if(recognition.indexOf("语") == 3){
                     recognition = recognition.replaceFirst("语，","语:");
@@ -56,10 +60,11 @@ public class MsgDispatcher {
                     recognition = recognition.replaceFirst("译，","译:");
                 }
                 System.out.println("========================语音消息"+recognition);
-                return sendMessageService.sendMessageTranslate(recognition,openid,mpid);
+
             } else {
                 return sendMessageService.sendMessageNews(recognition,openid,mpid);
             }
+            return sendMessageService.sendMessageTranslate(recognition,openid,mpid);
         }
 
         return null;

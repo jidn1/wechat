@@ -52,4 +52,23 @@ public interface SendMessageService {
      * @return
      */
     public String sendMessageTranslate(String content,String openid,String mpid);
+
+    /**
+     * 发送语音消息
+     * @param content
+     * @param openid
+     * @param mpid
+     * @return
+     */
+    public String sendMessageVoice(String content,String openid,String mpid);
+
+    /**
+     * 发送音乐消息
+     * @param content
+     * @param openid
+     * @param mpid
+     * @return
+     */
+    public String sendMessageMusic(String content,String openid,String mpid);
+
 }

@@ -6,7 +6,7 @@ package com.jidn.wechat.message.resp;
  * @Date: 2018/12/26 17:36
  * Description: 语音消息
  */
-public class VoiceMessage {
+public class VoiceMessage extends BaseMessage{
     private Voice Voice;
 
     public Voice getVoice() {

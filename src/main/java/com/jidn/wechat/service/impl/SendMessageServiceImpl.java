@@ -3,14 +3,13 @@ package com.jidn.wechat.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.jidn.common.baidu.translate.TransApi;
 import com.jidn.common.service.RedisService;
-import com.jidn.common.util.WeChatConstants;
+import com.jidn.common.util.*;
 import com.jidn.web.model.News;
-import com.jidn.common.util.GlobalConstants;
 import com.jidn.wechat.message.resp.*;
 import com.jidn.wechat.service.SendMessageService;
-import com.jidn.common.util.HttpPostUploadUtil;
-import com.jidn.common.util.MessageUtil;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import sun.awt.windows.WEmbeddedFrame;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -128,7 +127,7 @@ public class SendMessageServiceImpl implements SendMessageService {
         TextMessage txtMsg=new TextMessage();
         try {
             TransApi api = new TransApi(GlobalConstants.getInterfaceUrl("baiduApi"), GlobalConstants.getInterfaceUrl("baiduSecurityKey"));
-            String  content_result = api.getTransResult(content.split(":")[1], content);
+            String  content_result = api.getTransResult(content, content);
             char [] content_result_temp = content_result.toCharArray();
             content_result = "";
             for(int i = content_result_temp.length-5;;i--) {
@@ -148,6 +147,57 @@ public class SendMessageServiceImpl implements SendMessageService {
         return MessageUtil.textMessageToXml(txtMsg);
     }
 
+
+    @Override
+    public String sendMessageVoice(String content,String openid, String mpid) {
+        VoiceMessage voiceMsg = new VoiceMessage();
+        try{
+           // String mediaId = FileUtil.WeChatUpload("D:\\ideaWorkSpace\\gitProject\\wechat\\4ace38b7-8545-44d0-a0cb-9e341c0245d3.MP3", GlobalConstants.getInterfaceUrl("access_token"), "voice");
+            Voice v = new Voice();
+            voiceMsg.setToUserName(openid);
+            voiceMsg.setFromUserName(mpid);
+            voiceMsg.setCreateTime(new Date().getTime());
+            voiceMsg.setMsgType(MessageUtil.REQ_MESSAGE_TYPE_VOICE);
+            v.setMediaId("vdvD0M__3-2y4HgCUL0HUBYbhWRSGMJUxXGoK_0K04wfAhUnKr1s4aExoMG3XT5_");
+            voiceMsg.setVoice(v);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return MessageUtil.voiceMessageToXml(voiceMsg);
+    }
+
+    @Override
+    public String sendMessageMusic(String content,String openid, String mpid) {
+        MusicMessage musicMessage = new MusicMessage();
+        try{
+            Music music = new Music();
+
+
+
+            music.setThumbMediaId("4Ln9zjbEdBjMWS-TtYCmd89stx7CVmmmMGx1wdKul9-g6zOHQYJMukPEsC0pVd4h");
+
+            music.setTitle("达康书记不同意");
+
+            music.setDescription("达康书记不容易——山东工商学院杨军老师作词作曲演唱");
+
+            music.setMusicUrl("http://wchat.nat123.cc/weichat/output.mp3");
+
+            music.setHQMusicUrl("http://wchat.nat123.cc/weichat/output.mp3");
+
+
+            musicMessage.setToUserName(openid);
+            musicMessage.setFromUserName(mpid);
+
+            musicMessage.setMsgType(MessageUtil.RESP_MESSAGE_TYPE_MUSIC);
+
+            musicMessage.setCreateTime(new Date().getTime());
+
+            musicMessage.setMusic(music);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return MessageUtil.musicMessageToXml(musicMessage);
+    }
 
     public Map<String,String> filterImageByKeyWrold(String content){
         Map<String,String> imgMap = new HashMap<String,String>();
@@ -240,6 +290,34 @@ public class SendMessageServiceImpl implements SendMessageService {
         article.setPicUrl(n.getNewImg());
         article.setUrl(n.getNewHref());
         return article;
+    }
+
+    public String ifSwitchLang(String content){
+        StringBuilder sbLan = new StringBuilder(WeChatConstants.translate);
+        try{
+            String defaultLan = redisService.get(WeChatConstants.defaultLanguage);
+            if(!StringUtils.isEmpty(defaultLan)){
+                if("jp".equals(defaultLan)){
+                    sbLan.append(WeChatConstants.Language_jp);
+                } else if("kor".equals(defaultLan)){
+                    sbLan.append(WeChatConstants.Language_kor);
+                } else if("fra".equals(defaultLan)){
+                    sbLan.append(WeChatConstants.Language_fra);
+                } else if("ru".equals(defaultLan)){
+                    sbLan.append(WeChatConstants.Language_ru);
+                } else if("de".equals(defaultLan)){
+                    sbLan.append(WeChatConstants.Language_de);
+                } else {
+                    sbLan.append(WeChatConstants.Language_en);
+                }
+            } else {
+                sbLan.append(WeChatConstants.Language_en);
+            }
+            sbLan.append(":").append(content);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return sbLan.toString();
     }
 
 }

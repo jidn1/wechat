@@ -6,7 +6,7 @@ package com.jidn.wechat.message.resp;
  * @Date: 2018/12/26 17:35
  * Description: 视频消息
  */
-public class VideoMessage {
+public class VideoMessage extends BaseMessage{
     private Video Video;
 
     public Video getVideo() {
