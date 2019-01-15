@@ -8,59 +8,55 @@ package com.jidn.common.util;
  */
 public class WeChatConstants {
 
-    public static final String RedisKey = "zjjWechat";
+    public static final String REDIS_KEY = "zjjWechat";
 
-    public static final String defaultLanguage = "zjjWechat:defaultLanguage";
+    public static final String DEFAULT_LANGUAGE = "zjjWechat:defaultLanguage";
 
-    public static final String xzh = "";
+    public static final String WECHAT_VOICE = "voice";
 
-    public static final String xjj = "";
+    public static final String SWITCH_MODE = "切换为";
 
-    public static final String aj = "";
+    public static final String FINANCE = "财经";
 
-    public static final String xubb = "";
+    public static final String ENTERTAINMENT = "娱乐";
 
-    public static final String zhangy = "";
+    public static final String SPORT = "体育";
 
-    public static final String xiaok = "";
+    public static final String MILITARY = "军事";
 
-    public static final String translate = "翻译";
+    public static final String HOT_SPOT = "热点";
 
-    public static final String switchMode = "切换为";
+    public static final String REDIS_NEW_SPORT = "体育排行";
 
-    public static final String history = "历史";
+    public static final String REDIS_NEW_MILITARY = "军事排行";
 
-    public static final String read = "读书";
+    public static final String REDIS_NEW_ENTERTAINMENT = "娱乐排行";
 
-    public static final String finance = "财经";
+    public static final String REDIS_NEW_HOT_SPORT = "资讯排行";
 
-    public static final String entertainment = "娱乐";
+    public static final String REDIS_NEW_FINANCE = "财经排行";
 
-    public static final String sport = "体育";
+    public static final String LANGUAGE_JP = "日语";
 
-    public static final String military = "军事";
+    public static final String LANGUAGE_KOR = "韩语";
 
-    public static final String hotSpot = "热点";
+    public static final String LANGUAGE_FRA = "法语";
 
-    public static final String redisNewSport = "体育排行";
+    public static final String LANGUAGE_RU = "俄语";
 
-    public static final String redisNewMilitary = "军事排行";
+    public static final String LANGUAGE_DE = "德语";
 
-    public static final String redisNewEntertainment = "娱乐排行";
+    public static final String LANGUAGE_EN = "英语";
 
-    public static final String redisNewHotSpot = "资讯排行";
+    public static final String LANGUAGE_ZH = "中文";
 
-    public static final String redisNewFinance = "财经排行";
+    public static final String SET_LANGUAGE_MSG = "已切换为LANG模式,到期时间为"+DateUtil.getLaterTime(11,1);
 
-    public static final String Language_jp = "日语";
+    public static final String MSG_TYPE = "MsgType";
 
-    public static final String Language_kor = "韩语";
+    public static final String MMZ = "小吉你长什么样子";
 
-    public static final String Language_fra = "法语";
+    public static final String XJBSB = "对不起，您的语音小吉识别不出来，小吉正在努力学习中。";
 
-    public static final String Language_ru = "俄语";
-
-    public static final String Language_de = "德语";
-
-    public static final String Language_en = "英语";
+    public static final String NO_FIND_FILE = "文件不存在";
 }

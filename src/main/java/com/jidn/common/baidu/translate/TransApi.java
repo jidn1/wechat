@@ -1,8 +1,8 @@
 package com.jidn.common.baidu.translate;
 
-import com.jidn.common.util.HttpUtils;
-import com.jidn.common.util.MD5;
-import com.jidn.common.util.WeChatConstants;
+import com.jidn.common.service.RedisService;
+import com.jidn.common.util.*;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,7 +14,7 @@ import java.util.Map;
  */
 public class TransApi {
 
-    private static final String TRANS_API_HOST = "http://api.fanyi.baidu.com/api/trans/vip/translate";
+    private static final String TRANS_API_HOST = GlobalConstants.getInterfaceUrl("translate_baidu");
 
     private String appid;
     private String securityKey;
@@ -24,16 +24,16 @@ public class TransApi {
         this.securityKey = securityKey;
     }
 
-    public String getTransResult(String query, String to) {
-        Map<String, String> params = buildParams(query, "auto", to);
+    public String getTransResult(String query) {
+        Map<String, String> params = buildParams(query, "auto");
         return HttpUtils.get(TRANS_API_HOST, params);
     }
 
-    private Map<String, String> buildParams(String query, String from, String to) {
+    private Map<String, String> buildParams(String query, String from) {
         Map<String, String> params = new HashMap<String, String>();
         params.put("q", query);
         params.put("from", from);
-        params.put("to", getLanguage(to));
+        params.put("to", getLanguage());
         params.put("appid", appid);
         // 随机数
         String salt = String.valueOf(System.currentTimeMillis());
@@ -43,54 +43,9 @@ public class TransApi {
         return params;
     }
 
-    public String getLanguage(String to){
-        String ifHasLan = to.split(":")[0];
-        String toLan = "";
-        try{
-            if(ifHasLan.length() >= 4){
-                String Language = ifHasLan.substring(2,4);
-                if(WeChatConstants.Language_jp.equals(Language)){
-                    toLan = "jp";
-                } else if(WeChatConstants.Language_kor.equals(Language)){
-                    toLan = "kor";
-                } else if(WeChatConstants.Language_fra.equals(Language)){
-                    toLan = "fra";
-                } else if(WeChatConstants.Language_ru.equals(Language)){
-                    toLan = "ru";
-                } else if(WeChatConstants.Language_de.equals(Language)){
-                    toLan = "de";
-                } else if(WeChatConstants.Language_en.equals(Language)){
-                    toLan = "en";
-                }
-            } else {
-                toLan = "en";
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return toLan;
+    public String getLanguage(){
+        RedisService redisService = (RedisService) SpringUtil.getBean("redisService");
+        return redisService.get(WeChatConstants.DEFAULT_LANGUAGE);
     }
-
-
-
-    //생활은 줄곧 이렇게 고통스럽다
-    public static void main(String[] args) {
-        String APP_ID = "20190111000256167";
-        String SECURITY_KEY = "Vk06GyVtmEWgLkZyx6b8";
-        TransApi api = new TransApi(APP_ID, SECURITY_KEY);
-        try {
-            String query = "翻译韩语:生活一直是如此痛苦";
-            String str = query.split(":")[1];
-            String transResult = api.getTransResult(str, query);
-            String res = new String(transResult.getBytes("US-ASCII"), "gbk");
-
-            System.out.println(transResult);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
-
-
 
 }

@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.jidn.common.util.WeChatConstants;
 import com.jidn.wechat.dispatcher.EventDispatcher;
 import com.jidn.wechat.dispatcher.MsgDispatcher;
 import com.jidn.common.util.MessageUtil;
@@ -73,7 +74,7 @@ public class WechatSecurityController {
     public void DoPost(HttpServletRequest request,HttpServletResponse response) {
         try{
             Map<String, String> map=MessageUtil.parseXml(request);
-            String msgtype=map.get("MsgType");
+            String msgtype=map.get(WeChatConstants.MSG_TYPE);
             String respXML = "";
             if(MessageUtil.REQ_MESSAGE_TYPE_EVENT.equals(msgtype)){
                 respXML = EventDispatcher.processEvent(map); //进入事件处理

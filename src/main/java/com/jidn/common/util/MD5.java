@@ -8,7 +8,7 @@ import java.security.NoSuchAlgorithmException;
  * @Copyright © 北京互融时代软件有限公司
  * @Author: Jidn
  * @Date: 2019/1/11 9:52
- * @Description:md5加密
+ * @Description: md5加密
  */
 public class MD5 {
 

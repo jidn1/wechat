@@ -24,7 +24,7 @@ public class EventDispatcher {
         String mpid = map.get("ToUserName"); // 公众号原始 ID
 
         if (map.get("Event").equals(MessageUtil.EVENT_TYPE_SUBSCRIBE)) { // 关注事件
-            return sendMessageService.sendMessageText(openid,mpid);
+            return sendMessageService.sendMessageText(null,openid,mpid);
         }
 
         if (map.get("Event").equals(MessageUtil.EVENT_TYPE_UNSUBSCRIBE)) { //取消关注事件

@@ -17,7 +17,7 @@ public interface SendMessageService {
      * @param mpid
      * @return
      */
-    public String sendMessageText(String openid,String mpid);
+    public String sendMessageText(String content,String openid,String mpid);
 
     /**
      * 发送图片消息
@@ -25,16 +25,7 @@ public interface SendMessageService {
      * @param mpid
      * @return
      */
-    public String sendMessageImage(String openid,String mpid);
-
-    /**
-     * 根据关键字回复消息
-     * @param content
-     * @param openid
-     * @param mpid
-     * @return
-     */
-    public String sendMessageByContent(String content,String openid,String mpid);
+    public String sendMessageImage(String content,String openid,String mpid);
 
     /**
      * 发送图文消息
