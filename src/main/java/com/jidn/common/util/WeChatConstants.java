@@ -14,6 +14,8 @@ public class WeChatConstants {
 
     public static final String WECHAT_VOICE = "voice";
 
+    public static final String WECHAT_VOICE_FILE_PATH = "wechat:voice";
+
     public static final String SWITCH_MODE = "切换为";
 
     public static final String FINANCE = "财经";
@@ -59,4 +61,6 @@ public class WeChatConstants {
     public static final String XJBSB = "对不起，您的语音小吉识别不出来，小吉正在努力学习中。";
 
     public static final String NO_FIND_FILE = "文件不存在";
+
+    public static final String XJMX = "小吉没学呢";
 }

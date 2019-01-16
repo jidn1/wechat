@@ -48,7 +48,7 @@ public class FileUtil {
                             byteArrayOutputStream.close();
 
 
-                            String img_server_type = GlobalConstants.getInterfaceUrl("img_server_type");
+                            String img_server_type = GlobalConstants.getProperties("img_server_type");
                             switch (img_server_type) {
                                 case "oss": // 阿里云oss
                                     break;
@@ -71,7 +71,7 @@ public class FileUtil {
     }
 
 
-    public static void getFile(byte[] bfile, String filePath, String fileName) {
+    public static void writeBytesToFileSystem(byte[] bfile, String filePath, String fileName) {
         BufferedOutputStream bos = null;
         FileOutputStream fos = null;
         File file = null;
@@ -110,8 +110,8 @@ public class FileUtil {
         if (!file.exists() || !file.isFile()) {
             throw new IOException(WeChatConstants.NO_FIND_FILE);
         }
-        String url = GlobalConstants.getInterfaceUrl("material_url").replace("ACCESS_TOKEN", accessToken).replace("TYPE",type);
-       // String url = "https://api.weixin.qq.com/cgi-bin/media/upload?access_token=ACCESS_TOKEN&type=TYPE".replace("ACCESS_TOKEN", accessToken).replace("TYPE",type);
+       // String url = GlobalConstants.getProperties("material_url").replace("ACCESS_TOKEN", accessToken).replace("TYPE",type);
+        String url = "https://api.weixin.qq.com/cgi-bin/media/upload?access_token=ACCESS_TOKEN&type=TYPE".replace("ACCESS_TOKEN", accessToken).replace("TYPE",type);
         URL urlObj = new URL(url);
         //连接
         HttpURLConnection con = (HttpURLConnection) urlObj.openConnection();
@@ -181,7 +181,7 @@ public class FileUtil {
         if (!file.exists() || !file.isFile()) {
             throw new IOException(WeChatConstants.NO_FIND_FILE);
         }
-        String url = GlobalConstants.getInterfaceUrl("material_permanent_url").replace("ACCESS_TOKEN", accessToken).replace("TYPE",type);
+        String url = GlobalConstants.getProperties("material_permanent_url").replace("ACCESS_TOKEN", accessToken).replace("TYPE",type);
        // String url = "https://api.weixin.qq.com/cgi-bin/material/add_material?access_token=ACCESS_TOKEN&type=TYPE".replace("ACCESS_TOKEN", accessToken).replace("TYPE",type);
         URL urlObj = new URL(url);
         //连接

@@ -7,6 +7,7 @@ import com.jidn.common.service.RedisService;
 import com.jidn.common.util.*;
 import com.jidn.web.model.News;
 import com.jidn.wechat.message.resp.*;
+import com.jidn.wechat.runable.SpeechUploadRunable;
 import com.jidn.wechat.service.SendMessageService;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -37,7 +38,7 @@ public class SendMessageServiceImpl implements SendMessageService {
            txtMsg.setCreateTime(new Date().getTime());
            txtMsg.setMsgType(MessageUtil.RESP_MESSAGE_TYPE_TEXT);
            if(StringUtils.isEmpty(content)){
-               txtMsg.setContent(GlobalConstants.getInterfaceUrl("msg_text_hello"));
+               txtMsg.setContent(GlobalConstants.getProperties("msg_text_hello"));
            } else {
                txtMsg.setContent(content);
            }
@@ -88,7 +89,7 @@ public class SendMessageServiceImpl implements SendMessageService {
     public String sendMessageTranslate(String content,String openid, String mpid) {
         TextMessage txtMsg=new TextMessage();
         try {
-            TransApi api = new TransApi(GlobalConstants.getInterfaceUrl("baiduApi"), GlobalConstants.getInterfaceUrl("baiduSecurityKey"));
+            TransApi api = new TransApi(GlobalConstants.getProperties("baiduApi"), GlobalConstants.getProperties("baiduSecurityKey"));
             String  content_result = api.getTransResult(content);
             char [] content_result_temp = content_result.toCharArray();
             content_result = "";
@@ -116,7 +117,7 @@ public class SendMessageServiceImpl implements SendMessageService {
         try{
             String mediaId = getMediaIdByVoice(content);
             if(StringUtils.isEmpty(mediaId)){
-                mediaId = getRealTimeMediaId(WeChatConstants.XJBSB);
+                mediaId = getRealTimeMediaId(content);
             }
             Voice v = new Voice();
             voiceMsg.setToUserName(openid);
@@ -176,10 +177,10 @@ public class SendMessageServiceImpl implements SendMessageService {
                 List<News> news = JSONObject.parseArray(NewEntertainment, News.class);
                 article = getRandomArticle(news);
             } else {//博客
-                article.setTitle(GlobalConstants.getInterfaceUrl("blog_name"));
-                article.setPicUrl(GlobalConstants.getInterfaceUrl("blog_img"));
-                article.setDescription(GlobalConstants.getInterfaceUrl("blog_description")); //图文消息的描述
-                article.setUrl(GlobalConstants.getInterfaceUrl("blog_url"));  //图文 url 链接
+                article.setTitle(GlobalConstants.getProperties("blog_name"));
+                article.setPicUrl(GlobalConstants.getProperties("blog_img"));
+                article.setDescription(GlobalConstants.getProperties("blog_description")); //图文消息的描述
+                article.setUrl(GlobalConstants.getProperties("blog_url"));  //图文 url 链接
             }
         } catch (Exception e){
             e.printStackTrace();
@@ -200,17 +201,24 @@ public class SendMessageServiceImpl implements SendMessageService {
     }
 
     public String getMediaIdByVoice(String content){
+        content = content.replace(",","").replace("，","").replace("。","");
         String mediaId = redisService.hget(WeChatConstants.WECHAT_VOICE, content);
         return mediaId;
     }
 
-
     public String getRealTimeMediaId(String content){
         String mediaId = "";
+        String url = "";
+        String fileContent = content.replace(",","").replace("，","").replace("。","");
         try{
-            String url = SpeechApi.synthesis(content,GlobalConstants.getInterfaceUrl("baiduSpeechApi"),
-                    GlobalConstants.getInterfaceUrl("baiduSpeechApiKey"),GlobalConstants.getInterfaceUrl("baiduSpeechApiSecretKey"));
-            mediaId =  FileUtil.WeChatUpload(url,GlobalConstants.getInterfaceUrl("access_token"),"voice");
+            url = redisService.hget(WeChatConstants.WECHAT_VOICE, fileContent);
+            if(StringUtils.isEmpty(url)){
+                url = SpeechApi.synthesis(content,GlobalConstants.getProperties("baiduSpeechApi"),
+                        GlobalConstants.getProperties("baiduSpeechApiKey"),GlobalConstants.getProperties("baiduSpeechApiSecretKey"));
+            }
+            redisService.hset(WeChatConstants.WECHAT_VOICE_FILE_PATH,content,url);
+            mediaId = redisService.hget(WeChatConstants.WECHAT_VOICE, WeChatConstants.XJMX);
+            ThreadPool.exe(new SpeechUploadRunable(url,content));
         }catch (Exception e){
             e.printStackTrace();
         }

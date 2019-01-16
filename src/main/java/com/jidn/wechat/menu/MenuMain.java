@@ -45,7 +45,7 @@ public class MenuMain {
         String url="https://api.weixin.qq.com/cgi-bin/menu/create?access_token=17_aRA4YyZZH6NBrCb-oYAvbR0KHGtJQ6CMVta3sqXdKYn1xtmy4m6KtoAul4qF9m3s38jHXlHFF5BmKp0Ogme5fu1f2ibbJ3zxZctLwGr4yLD5PYRpOs86t5rJ8QaNxsJ_BU7X6JGezsC5GZtULDPiADASKW";
 //        HashMap<String, String> params = new HashMap<String, String>();
 //        params.put("access_token",
-//                GlobalConstants.getInterfaceUrl("access_token"));  //定时器中获取到的 token
+//                GlobalConstants.getProperties("access_token"));  //定时器中获取到的 token
         try{
             String rs=HttpUtils.sendPostBuffer(url, menujson.toJSONString());
             System.out.println(rs);

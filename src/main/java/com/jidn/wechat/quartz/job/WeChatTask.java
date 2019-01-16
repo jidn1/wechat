@@ -27,12 +27,12 @@ public class WeChatTask {
     public void getToken_getTicket() throws Exception {
         Map<String, String> params = new HashMap<String, String>();
         params.put("grant_type", "client_credential");
-        params.put("appid", GlobalConstants.getInterfaceUrl("appid"));
-        params.put("secret", GlobalConstants.getInterfaceUrl("AppSecret"));
+        params.put("appid", GlobalConstants.getProperties("appid"));
+        params.put("secret", GlobalConstants.getProperties("AppSecret"));
         String jstoken = HttpUtils.sendGet(
-                GlobalConstants.getInterfaceUrl("tokenUrl"), params);
+                GlobalConstants.getProperties("tokenUrl"), params);
         String access_token = JSONObject.parseObject(jstoken).get("access_token").toString(); // 获取到 token 并赋值保存
-        GlobalConstants.interfaceUrlProperties.put("access_token", access_token);
+        GlobalConstants.App.put("access_token", access_token);
         System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())+"token 为=============================="+access_token);
     }
 }

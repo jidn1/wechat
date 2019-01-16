@@ -3,6 +3,8 @@ package com.jidn.common.baidu.speech;
 import com.baidu.aip.speech.AipSpeech;
 import com.baidu.aip.speech.TtsResponse;
 import com.baidu.aip.util.Util;
+import com.jidn.common.util.FileUtil;
+import com.jidn.common.util.GlobalConstants;
 import org.json.JSONObject;
 import org.springframework.util.StringUtils;
 
@@ -34,12 +36,15 @@ public class SpeechApi {
             return result.toString();
         }
         String fileName =  UUID.randomUUID()+".mp3";
+        String filePath = GlobalConstants.getProperties("WRITE_FILE_SYSTEM");
+        filePath = "D:\\ideaWorkSpace\\gitProject\\wechat\\";
         byte[] data = res.getData();
         JSONObject res1 = res.getResult();
         if (data != null) {
             try {
-                Util.writeBytesToFileSystem(data, fileName);
-            } catch (IOException e) {
+              //  Util.writeBytesToFileSystem(data, fileName);
+                FileUtil.writeBytesToFileSystem(data,filePath,fileName);
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }

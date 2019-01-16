@@ -14,7 +14,7 @@ import java.util.Map;
  */
 public class TransApi {
 
-    private static final String TRANS_API_HOST = GlobalConstants.getInterfaceUrl("translate_baidu");
+    private static final String TRANS_API_HOST = GlobalConstants.getProperties("translate_baidu");
 
     private String appid;
     private String securityKey;

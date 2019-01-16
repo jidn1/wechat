@@ -28,11 +28,11 @@ public class GetUseInfo {
             throws Exception {
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("access_token",
-                GlobalConstants.getInterfaceUrl("access_token"));  //定时器中获取到的 token
+                GlobalConstants.getProperties("access_token"));  //定时器中获取到的 token
         params.put("openid", openid);  //需要获取的用户的 openid
         params.put("lang", "zh_CN");
         String subscribers = HttpUtils.sendGet(
-                GlobalConstants.getInterfaceUrl("OpenidUserinfoUrl"), params);
+                GlobalConstants.getProperties("OpenidUserinfoUrl"), params);
         System.out.println(subscribers);
         params.clear();
         //这里返回参数只取了昵称、头像、和性别
