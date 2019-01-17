@@ -1,10 +1,17 @@
 package com.jidn.common.util;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.jidn.common.baidu.speech.SpeechApi;
 import com.jidn.common.oss.OssUtil;
-import org.apache.http.HttpHeaders;
+import org.apache.http.*;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.protocol.BasicHttpContext;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.MediaType;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -84,6 +91,16 @@ public class FileUtil {
         return fileName;
     }
 
+    public static String WeChatVoiceToOss(InputStream inputStream, String filePath) {
+        try {
+            //上传流
+            OssUtil.upload(inputStream, filePath,true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return filePath;
+    }
+
 
     public static String WeChatUpload(String filePath,String type) throws Exception {
         File file = new File(filePath);
@@ -91,7 +108,6 @@ public class FileUtil {
             throw new IOException(WeChatConstants.NO_FIND_FILE);
         }
         String url = GlobalConstants.getProperties("material_url").replace("ACCESS_TOKEN", GlobalConstants.getProperties("access_token")).replace("TYPE",type);
-       // String url = "https://api.weixin.qq.com/cgi-bin/media/upload?access_token=ACCESS_TOKEN&type=TYPE".replace("ACCESS_TOKEN", accessToken).replace("TYPE",type);
         URL urlObj = new URL(url);
         //连接
         HttpURLConnection con = (HttpURLConnection) urlObj.openConnection();
@@ -162,7 +178,6 @@ public class FileUtil {
             throw new IOException(WeChatConstants.NO_FIND_FILE);
         }
         String url = GlobalConstants.getProperties("material_permanent_url").replace("ACCESS_TOKEN", GlobalConstants.getProperties("access_token")).replace("TYPE",type);
-       // String url = "https://api.weixin.qq.com/cgi-bin/material/add_material?access_token=ACCESS_TOKEN&type=TYPE".replace("ACCESS_TOKEN", accessToken).replace("TYPE",type);
         URL urlObj = new URL(url);
         //连接
         HttpURLConnection con = (HttpURLConnection) urlObj.openConnection();
@@ -278,5 +293,107 @@ public class FileUtil {
         //把outStream里的数据写入内存
         return outStream.toByteArray();
     }
+
+
+    public static File downloadMedia(String accessToken,String mediaId, String fileDir) throws Exception  {
+
+        String url = GlobalConstants.getProperties("get_material_url").replace("ACCESS_TOKEN", accessToken).replace("MEDIA_ID", mediaId);
+        //1.生成一个请求
+        HttpGet httpGet = new HttpGet(url);
+        //2.配置请求属性
+        RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(100000).setConnectTimeout(100000).build();
+        httpGet.setConfig(requestConfig);
+
+        //3.发起请求，获取响应信息
+        //3.1 创建httpClient
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        CloseableHttpResponse response = null;
+
+        //4.设置本地保存的文件
+        //File file = new File(fileDir);
+        File file = null;
+        try {
+            //5. 发起请求，获取响应信息
+            response = httpClient.execute(httpGet, new BasicHttpContext());
+            System.out.println("HttpStatus.SC_OK:"+ HttpStatus.SC_OK);
+            System.out.println("response.getStatusLine().getStatusCode():"+response.getStatusLine().getStatusCode());
+            System.out.println("http-header:"+ JSON.toJSONString( response.getAllHeaders() ));
+            System.out.println("http-filename:"+getFileName(response) );
+
+            //请求成功
+            if(HttpStatus.SC_OK==response.getStatusLine().getStatusCode()){
+
+                //6.取得请求内容
+                HttpEntity entity = response.getEntity();
+
+                if (entity != null) {
+                    //这里可以得到文件的类型 如image/jpg /zip /tiff 等等 但是发现并不是十分有效，有时明明后缀是.rar但是取到的是null，这点特别说明
+                    System.out.println(entity.getContentType());
+                    //可以判断是否是文件数据流
+                    System.out.println(entity.isStreaming());
+
+                    //6.1 输出流
+                    //6.1.1获取文件名，拼接文件路径
+                    String fileName=getFileName(response);
+                    fileDir=fileDir+fileName;
+                    file = new File(fileDir);
+                    //6.1.2根据文件路径获取输出流
+                    FileOutputStream output = new FileOutputStream(file);
+
+                    //6.2 输入流：从钉钉服务器返回的文件流，得到网络资源并写入文件
+                    InputStream input = entity.getContent();
+
+                    //6.3 将数据写入文件：将输入流中的数据写入到输出流
+                    byte b[] = new byte[1024];
+                    int j = 0;
+                    while( (j = input.read(b))!=-1){
+                        output.write(b,0,j);
+                    }
+                    output.flush();
+                    output.close();
+                }
+                if (entity != null) {
+                    entity.consumeContent();
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("request url=" + url + ", exception, msg=" + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            if (response != null) try {
+                response.close();                       //释放资源
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return file;
+    }
+
+    public static String getFileName(HttpResponse response) {
+        Header contentHeader = response.getFirstHeader("Content-Disposition");
+        String filename = null;
+        if (contentHeader != null) {
+            HeaderElement[] values = contentHeader.getElements();
+            if (values.length == 1) {
+                NameValuePair param = values[0].getParameterByName("filename");
+                if (param != null) {
+                    try {
+                        //filename = new String(param.getValue().toString().getBytes(), "utf-8");
+                        //filename=URLDecoder.decode(param.getValue(),"utf-8");
+                        filename = param.getValue();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return filename;
+    }
+
+
+
 
 }

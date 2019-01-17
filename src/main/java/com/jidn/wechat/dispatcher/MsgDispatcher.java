@@ -60,21 +60,23 @@ public class MsgDispatcher {
 
         if (map.get(WeChatConstants.MSG_TYPE).equals(MessageUtil.REQ_MESSAGE_TYPE_VOICE)) { // 语音消息
             String recognition=map.get("Recognition");
-            String mmz=map.get("Recognition").replace(",","").replace("，","").replace("。","");
-            System.out.println("语音消息===================="+recognition+"======================"+mmz);
-            if(recognition.startsWith(WeChatConstants.SWITCH_MODE)){
-                return weChatService.switchModeLanguage(recognition,openid,mpid);
-            } else {
-                if (StringUtils.isEmpty(defaultLan)) {
-                    if(WeChatConstants.MMZ.equals(mmz)){
-                        return sendMessageService.sendMessageImage(recognition,openid,mpid);
-                    } else {
-                        return sendMessageService.sendMessageVoice(recognition,openid,mpid);
-                    }
-                } else {
-                    return sendMessageService.sendMessageTranslate(recognition, openid, mpid);
-                }
-            }
+            String media_id = map.get("MediaId");
+            System.out.println("=================================="+media_id);
+//            String mmz=map.get("Recognition").replace(",","").replace("，","").replace("。","");
+//            System.out.println("语音消息===================="+recognition+"======================"+mmz);
+//            if(recognition.startsWith(WeChatConstants.SWITCH_MODE)){
+//                return weChatService.switchModeLanguage(recognition,openid,mpid);
+//            } else {
+//                if (StringUtils.isEmpty(defaultLan)) {
+//                    if(WeChatConstants.MMZ.equals(mmz)){
+//                        return sendMessageService.sendMessageImage(recognition,openid,mpid);
+//                    } else {
+//                        return sendMessageService.sendMessageVoice(recognition,openid,mpid);
+//                    }
+//                } else {
+//                    return sendMessageService.sendMessageTranslate(recognition, openid, mpid);
+//                }
+//            }
         }
 
         return null;

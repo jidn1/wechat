@@ -20,7 +20,14 @@ import java.util.UUID;
  */
 public class SpeechApi {
 
-
+    /**
+     * 语音合成
+     * @param str
+     * @param appId
+     * @param apiKey
+     * @param secretKey
+     * @return
+     */
     public static String synthesis(String str,String appId,String apiKey,String secretKey) {
         AipSpeech client = new AipSpeech(appId, apiKey, secretKey);
         client.setConnectionTimeoutInMillis(2000);
@@ -44,6 +51,22 @@ public class SpeechApi {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+        return null;
+    }
+
+
+    public static String recognition(String src,String appId,String apiKey,String secretKey){
+        try {
+            AipSpeech client = new AipSpeech(appId, apiKey, secretKey);
+            client.setConnectionTimeoutInMillis(2000);
+            client.setSocketTimeoutInMillis(60000);
+
+            // 调用接口
+            JSONObject res = client.asr(src, "amr", 16000, null);
+            System.out.println(res.toString(2));
+        } catch (Exception e){
+            e.printStackTrace();
         }
         return null;
     }
