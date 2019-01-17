@@ -3,6 +3,7 @@ package com.jidn.wechat.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.jidn.common.baidu.speech.SpeechApi;
 import com.jidn.common.baidu.translate.TransApi;
+import com.jidn.common.oss.OssUtil;
 import com.jidn.common.service.RedisService;
 import com.jidn.common.util.*;
 import com.jidn.web.model.News;
@@ -74,7 +75,7 @@ public class SendMessageServiceImpl implements SendMessageService {
         newMsg.setCreateTime(new Date().getTime());
         newMsg.setMsgType(MessageUtil.RESP_MESSAGE_TYPE_NEWS);
         try {
-            Article article = filterNewsByKeyWrold(content);
+            Article article = filterNewsByKeyWorld(content);
             List<Article> list=new ArrayList<Article>();
             list.add(article); //如果需要发送多个 就加多个 Article 就OK
             newMsg.setArticleCount(list.size());
@@ -153,27 +154,44 @@ public class SendMessageServiceImpl implements SendMessageService {
         return MessageUtil.musicMessageToXml(musicMessage);
     }
 
-    public Article filterNewsByKeyWrold(String content){
+    @Override
+    public String sendMessageTv(String content, String openid, String mpid) {
+        TextMessage txtMsg=new TextMessage();
+        try {
+            String tvHref = redisService.hget(WeChatConstants.WECHAT_TV,content);
+            txtMsg.setToUserName(openid);
+            txtMsg.setFromUserName(mpid);
+            txtMsg.setCreateTime(new Date().getTime());
+            txtMsg.setMsgType(MessageUtil.RESP_MESSAGE_TYPE_TEXT);
+            System.out.println("===================="+tvHref);
+            txtMsg.setContent("<a href=\""+tvHref+"\">"+content+"</a>");
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return MessageUtil.textMessageToXml(txtMsg);
+    }
+
+    public Article filterNewsByKeyWorld(String content){
         Article article = new Article();
         try{
             if(WeChatConstants.ENTERTAINMENT.equals(content)){//娱乐
-                String NewEntertainment = redisService.hget(WeChatConstants.REDIS_KEY, WeChatConstants.REDIS_NEW_ENTERTAINMENT);
+                String NewEntertainment = redisService.hget(WeChatConstants.WECHAT_NEWS, WeChatConstants.REDIS_NEW_ENTERTAINMENT);
                 List<News> news = JSONObject.parseArray(NewEntertainment, News.class);
                 article = getRandomArticle(news);
             } else if(WeChatConstants.FINANCE.equals(content)){//财经
-                String NewEntertainment = redisService.hget(WeChatConstants.REDIS_KEY, WeChatConstants.REDIS_NEW_FINANCE);
+                String NewEntertainment = redisService.hget(WeChatConstants.WECHAT_NEWS, WeChatConstants.REDIS_NEW_FINANCE);
                 List<News> news = JSONObject.parseArray(NewEntertainment, News.class);
                 article = getRandomArticle(news);
             } else if(WeChatConstants.MILITARY.equals(content)){//军事
-                String NewEntertainment = redisService.hget(WeChatConstants.REDIS_KEY, WeChatConstants.REDIS_NEW_MILITARY);
+                String NewEntertainment = redisService.hget(WeChatConstants.WECHAT_NEWS, WeChatConstants.REDIS_NEW_MILITARY);
                 List<News> news = JSONObject.parseArray(NewEntertainment, News.class);
                 article = getRandomArticle(news);
             } else if(WeChatConstants.SPORT.equals(content)){//体育
-                String NewEntertainment = redisService.hget(WeChatConstants.REDIS_KEY, WeChatConstants.REDIS_NEW_SPORT);
+                String NewEntertainment = redisService.hget(WeChatConstants.WECHAT_NEWS, WeChatConstants.REDIS_NEW_SPORT);
                 List<News> news = JSONObject.parseArray(NewEntertainment, News.class);
                 article = getRandomArticle(news);
             } else if(WeChatConstants.HOT_SPOT.equals(content)){//热点
-                String NewEntertainment = redisService.hget(WeChatConstants.REDIS_KEY, WeChatConstants.REDIS_NEW_HOT_SPORT);
+                String NewEntertainment = redisService.hget(WeChatConstants.WECHAT_NEWS, WeChatConstants.REDIS_NEW_HOT_SPORT);
                 List<News> news = JSONObject.parseArray(NewEntertainment, News.class);
                 article = getRandomArticle(news);
             } else {//博客
@@ -208,17 +226,19 @@ public class SendMessageServiceImpl implements SendMessageService {
 
     public String getRealTimeMediaId(String content){
         String mediaId = "";
-        String url = "";
+        String urlFileName = "";
         String fileContent = content.replace(",","").replace("，","").replace("。","");
         try{
-            url = redisService.hget(WeChatConstants.WECHAT_VOICE, fileContent);
-            if(StringUtils.isEmpty(url)){
-                url = SpeechApi.synthesis(content,GlobalConstants.getProperties("baiduSpeechApi"),
-                        GlobalConstants.getProperties("baiduSpeechApiKey"),GlobalConstants.getProperties("baiduSpeechApiSecretKey"));
+            urlFileName = redisService.hget(WeChatConstants.WECHAT_VOICE_FILE_PATH, fileContent);
+            if(!StringUtils.isEmpty(urlFileName)){
+                String ossUrl = OssUtil.getUrl(urlFileName, true);
+                String localUrl = FileUtil.uploadOssVideo(ossUrl, urlFileName);
+                mediaId = FileUtil.WeChatUpload(localUrl,"voice");
+            } else {
+                redisService.hset(WeChatConstants.WECHAT_NO_REPLY,fileContent,WeChatConstants.XJMX);
+                mediaId = redisService.hget(WeChatConstants.WECHAT_VOICE,WeChatConstants.XJMX);
             }
-            redisService.hset(WeChatConstants.WECHAT_VOICE_FILE_PATH,content,url);
-            mediaId = redisService.hget(WeChatConstants.WECHAT_VOICE, WeChatConstants.XJMX);
-            ThreadPool.exe(new SpeechUploadRunable(url,content));
+            redisService.hset(WeChatConstants.WECHAT_VOICE,fileContent,mediaId);
         }catch (Exception e){
             e.printStackTrace();
         }

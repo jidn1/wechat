@@ -1,5 +1,6 @@
 package com.jidn.wechat.quartz;
 
+import com.jidn.wechat.quartz.job.RobotTask;
 import org.apache.log4j.Logger;
 
 import com.jidn.wechat.quartz.job.WeChatTask;
@@ -21,6 +22,15 @@ public class QuartzJob {
         try {
             WeChatTask timer = new WeChatTask();
             timer.getToken_getTicket();
+        } catch (Exception e) {
+            logger.error(e, e);
+        }
+    }
+
+    public void workForInit() {
+        try {
+            RobotTask timer = new RobotTask();
+            timer.Init_Dialogue();
         } catch (Exception e) {
             logger.error(e, e);
         }

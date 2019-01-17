@@ -35,22 +35,16 @@ public class SpeechApi {
             System.out.printf("error：" + result.toString());
             return result.toString();
         }
-        String fileName =  UUID.randomUUID()+".mp3";
         String filePath = GlobalConstants.getProperties("WRITE_FILE_SYSTEM");
-        filePath = "D:\\ideaWorkSpace\\gitProject\\wechat\\";
         byte[] data = res.getData();
-        JSONObject res1 = res.getResult();
+        System.out.println(com.alibaba.fastjson.JSONObject.toJSONString(res.getResult()));
         if (data != null) {
             try {
-              //  Util.writeBytesToFileSystem(data, fileName);
-                FileUtil.writeBytesToFileSystem(data,filePath,fileName);
+              return  FileUtil.writeBytesToOssVideo(data,filePath);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        if (res1 != null) {
-            System.out.println(res1.toString(2));
-        }
-        return "D:\\ideaWorkSpace\\gitProject\\wechat\\"+fileName;
+        return null;
     }
 }

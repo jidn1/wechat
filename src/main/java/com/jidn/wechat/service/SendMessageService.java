@@ -62,4 +62,13 @@ public interface SendMessageService {
      */
     public String sendMessageMusic(String content,String openid,String mpid);
 
+    /**
+     * 发送链接消息
+     * @param content
+     * @param openid
+     * @param mpid
+     * @return
+     */
+    public String sendMessageTv(String content,String openid,String mpid);
+
 }

@@ -8,13 +8,19 @@ package com.jidn.common.util;
  */
 public class WeChatConstants {
 
-    public static final String REDIS_KEY = "zjjWechat";
+    public static final String WECHAT_NEWS = "wechat:news";
 
-    public static final String DEFAULT_LANGUAGE = "zjjWechat:defaultLanguage";
+    public static final String DEFAULT_LANGUAGE = "zjjWechat:defaultLanguage";//公众号默认语言
 
-    public static final String WECHAT_VOICE = "voice";
+    public static final String WECHAT_VOICE = "wechat:mediaId";//微信素材Id
 
-    public static final String WECHAT_VOICE_FILE_PATH = "wechat:voice";
+    public static final String WECHAT_VOICE_FILE_PATH = "wechat:voice";//语音路径
+
+    public static final String WECHAT_NO_REPLY = "wechat:reply";//回答不出来的问题
+
+    public static final String WECHAT_DIALOGUE = "wechat:dialogue";//词库
+
+    public static final String WECHAT_TV = "wechat:tv";
 
     public static final String SWITCH_MODE = "切换为";
 
@@ -52,7 +58,7 @@ public class WeChatConstants {
 
     public static final String LANGUAGE_ZH = "中文";
 
-    public static final String SET_LANGUAGE_MSG = "已切换为LANG模式,到期时间为"+DateUtil.getLaterTime(11,1);
+    public static final String SET_LANGUAGE_MSG = "已切换为LANG模式,到期时间为"+DateUtil.getLaterTime(12,5);
 
     public static final String MSG_TYPE = "MsgType";
 

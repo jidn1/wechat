@@ -31,23 +31,15 @@ public class MsgDispatcher {
 
         if (map.get(WeChatConstants.MSG_TYPE).equals(MessageUtil.REQ_MESSAGE_TYPE_TEXT)) { // 文本消息
             String content=map.get("Content");
-            String mmz=map.get("Content").replace(",","").replace("，","").replace("。","");
-
-            if(WeChatConstants.MMZ.equals(mmz)){
-                return sendMessageService.sendMessageImage(content,openid,mpid);
+            if(content.startsWith(WeChatConstants.SWITCH_MODE)){
+                return weChatService.switchModeLanguage(content,openid,mpid);
             } else {
-                return sendMessageService.sendMessageVoice(content,openid,mpid);
+                if(StringUtils.isEmpty(defaultLan)){
+                    return weChatService.sendMessageProcessing(content,openid,mpid);
+                } else {
+                    return sendMessageService.sendMessageTranslate(content,openid,mpid);
+                }
             }
-
-//            if(content.startsWith(WeChatConstants.switchMode)){
-//                return weChatService.switchModeLanguage(content,openid,mpid);
-//            } else {
-//                if(StringUtils.isEmpty(defaultLan)){
-//                    return sendMessageService.sendMessageNews(content,openid,mpid);
-//                } else {
-//                    return sendMessageService.sendMessageTranslate(content,openid,mpid);
-//                }
-//            }
         }
 
         if (map.get(WeChatConstants.MSG_TYPE).equals(MessageUtil.REQ_MESSAGE_TYPE_IMAGE)) { // 图片消息
@@ -68,11 +60,17 @@ public class MsgDispatcher {
 
         if (map.get(WeChatConstants.MSG_TYPE).equals(MessageUtil.REQ_MESSAGE_TYPE_VOICE)) { // 语音消息
             String recognition=map.get("Recognition");
+            String mmz=map.get("Recognition").replace(",","").replace("，","").replace("。","");
+            System.out.println("语音消息===================="+recognition+"======================"+mmz);
             if(recognition.startsWith(WeChatConstants.SWITCH_MODE)){
                 return weChatService.switchModeLanguage(recognition,openid,mpid);
             } else {
                 if (StringUtils.isEmpty(defaultLan)) {
-
+                    if(WeChatConstants.MMZ.equals(mmz)){
+                        return sendMessageService.sendMessageImage(recognition,openid,mpid);
+                    } else {
+                        return sendMessageService.sendMessageVoice(recognition,openid,mpid);
+                    }
                 } else {
                     return sendMessageService.sendMessageTranslate(recognition, openid, mpid);
                 }

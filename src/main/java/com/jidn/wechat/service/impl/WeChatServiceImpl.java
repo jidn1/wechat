@@ -1,12 +1,18 @@
 package com.jidn.wechat.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.jidn.common.service.RedisService;
+import com.jidn.common.util.GlobalConstants;
 import com.jidn.common.util.WeChatConstants;
+import com.jidn.web.model.News;
+import com.jidn.wechat.message.resp.Article;
 import com.jidn.wechat.service.SendMessageService;
 import com.jidn.wechat.service.WeChatService;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @Copyright © 北京互融时代软件有限公司
@@ -42,12 +48,49 @@ public class WeChatServiceImpl implements WeChatService {
             } else if(WeChatConstants.LANGUAGE_EN.equals(Language)){
                 toLan = "en";
             } else if(WeChatConstants.LANGUAGE_ZH.equals(Language)){
-                toLan = null;
+                toLan = "";
             }
-            redisService.save(WeChatConstants.DEFAULT_LANGUAGE,toLan,60*5);//切换语言默认时间为1小时
+            redisService.save(WeChatConstants.DEFAULT_LANGUAGE,toLan,60*5);//切换语言默认时间为5分钟
         }catch (Exception e){
             e.printStackTrace();
         }
         return sendMessageService.sendMessageText(WeChatConstants.SET_LANGUAGE_MSG.replace("LANG",Language),openid,mpid);
+    }
+
+    @Override
+    public String sendMessageProcessing(String content, String openid, String mpid) {
+        try{
+            String newsContent = filterNewsByKeyWorld(content);
+            String tvContent = redisService.hget(WeChatConstants.WECHAT_TV, content);
+            if(!StringUtils.isEmpty(newsContent)){
+              return sendMessageService.sendMessageNews(content,openid,mpid);
+            } else if(!StringUtils.isEmpty(tvContent)){
+                return sendMessageService.sendMessageTv(content,openid,mpid);
+            } else {
+                return sendMessageService.sendMessageText(GlobalConstants.getProperties("msg_text_error"),openid,mpid);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public String filterNewsByKeyWorld(String content){
+        try{
+            if(WeChatConstants.ENTERTAINMENT.equals(content)){//娱乐
+                return redisService.hget(WeChatConstants.WECHAT_NEWS, WeChatConstants.REDIS_NEW_ENTERTAINMENT);
+            } else if(WeChatConstants.FINANCE.equals(content)){//财经
+                return redisService.hget(WeChatConstants.WECHAT_NEWS, WeChatConstants.REDIS_NEW_FINANCE);
+            } else if(WeChatConstants.MILITARY.equals(content)){//军事
+                return redisService.hget(WeChatConstants.WECHAT_NEWS, WeChatConstants.REDIS_NEW_MILITARY);
+            } else if(WeChatConstants.SPORT.equals(content)){//体育
+                return redisService.hget(WeChatConstants.WECHAT_NEWS, WeChatConstants.REDIS_NEW_SPORT);
+            } else if(WeChatConstants.HOT_SPOT.equals(content)){//热点
+                return redisService.hget(WeChatConstants.WECHAT_NEWS, WeChatConstants.REDIS_NEW_HOT_SPORT);
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 }
