@@ -64,7 +64,12 @@ public class SpeechApi {
 
             // 调用接口
             JSONObject res = client.asr(src, "amr", 16000, null);
-            System.out.println(res.toString(2));
+            if(null != res){
+                if("success".equals(res.get("err_msg"))){
+                    System.out.println("");
+                    return res.get("result").toString();
+                }
+            }
         } catch (Exception e){
             e.printStackTrace();
         }

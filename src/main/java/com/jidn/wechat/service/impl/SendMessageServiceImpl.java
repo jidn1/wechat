@@ -234,6 +234,7 @@ public class SendMessageServiceImpl implements SendMessageService {
                 String ossUrl = OssUtil.getUrl(urlFileName, true);
                 String localUrl = FileUtil.uploadOssVideo(ossUrl, urlFileName);
                 mediaId = FileUtil.WeChatUpload(localUrl,"voice");
+                FileUtil.delete(localUrl);
             } else {
                 redisService.hset(WeChatConstants.WECHAT_NO_REPLY,fileContent,WeChatConstants.XJMX);
                 mediaId = redisService.hget(WeChatConstants.WECHAT_VOICE,WeChatConstants.XJMX);

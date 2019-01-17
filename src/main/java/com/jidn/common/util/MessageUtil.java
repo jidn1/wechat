@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.jidn.common.baidu.speech.SpeechApi;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
@@ -241,4 +242,20 @@ public class MessageUtil {
             };
         }
     });
+
+
+    public static String voiceDealWith(Map<String, String> map){
+        String voiceMsg = "";
+        try {
+            String recognition=map.get("Recognition");
+            String media_id = map.get("MediaId");
+            System.out.println(recognition+"=================================="+media_id);
+
+            String localUrl = FileUtil.downloadMedia(GlobalConstants.getProperties("blog_description"), media_id);
+            voiceMsg = SpeechApi.recognition(localUrl, GlobalConstants.getProperties("baiduSpeechApi"), GlobalConstants.getProperties("baiduSpeechApiKey"), GlobalConstants.getProperties("baiduSpeechApiSecretKey"));
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return voiceMsg;
+    }
 }

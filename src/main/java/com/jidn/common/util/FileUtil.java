@@ -295,7 +295,7 @@ public class FileUtil {
     }
 
 
-    public static File downloadMedia(String accessToken,String mediaId, String fileDir) throws Exception  {
+    public static String downloadMedia(String accessToken,String mediaId) throws Exception  {
 
         String url = GlobalConstants.getProperties("get_material_url").replace("ACCESS_TOKEN", accessToken).replace("MEDIA_ID", mediaId);
         //1.生成一个请求
@@ -335,8 +335,7 @@ public class FileUtil {
                     //6.1 输出流
                     //6.1.1获取文件名，拼接文件路径
                     String fileName=getFileName(response);
-                    fileDir=fileDir+fileName;
-                    file = new File(fileDir);
+                    file = new File(fileName);
                     //6.1.2根据文件路径获取输出流
                     FileOutputStream output = new FileOutputStream(file);
 
@@ -369,7 +368,7 @@ public class FileUtil {
             }
         }
 
-        return file;
+        return file.getAbsolutePath();
     }
 
     public static String getFileName(HttpResponse response) {
@@ -391,6 +390,17 @@ public class FileUtil {
             }
         }
         return filename;
+    }
+
+    public static void delete(String filepath){
+        try {
+            File file = new File(filepath);
+            if(file.exists()){
+                file.delete();
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
 
