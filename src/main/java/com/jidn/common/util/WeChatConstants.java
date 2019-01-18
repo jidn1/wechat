@@ -18,11 +18,17 @@ public class WeChatConstants {
 
     public static final String WECHAT_NO_REPLY = "wechat:reply";//回答不出来的问题
 
-    public static final String WECHAT_DIALOGUE = "wechat:dialogue";//词库
+    public static final String WECHAT_DIALOGUE = "wechat:dialogue";//词库永久
+
+    public static final String WECHAT_DIALOGUE_TEM = "wechat:dialoguetemp";//词库临时
 
     public static final String WECHAT_TV = "wechat:tv";
 
     public static final String SWITCH_MODE = "切换为";
+
+    public static final String WECHAT_ADD_TAKE = "增加对话";//增加对话:今天吃什么=吃炒面
+
+    public static final String WECHAT_NO_REPLY_GET = "机器人未识别的对话";
 
     public static final String FINANCE = "财经";
 

@@ -13,6 +13,7 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Copyright © 北京互融时代软件有限公司
@@ -49,6 +50,8 @@ public class WeChatServiceImpl implements WeChatService {
                 toLan = "en";
             } else if(WeChatConstants.LANGUAGE_ZH.equals(Language)){
                 toLan = "";
+            } else {
+                toLan = "";
             }
             redisService.save(WeChatConstants.DEFAULT_LANGUAGE,toLan,60*5);//切换语言默认时间为5分钟
         }catch (Exception e){
@@ -73,6 +76,32 @@ public class WeChatServiceImpl implements WeChatService {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public String addRobotDialogue(String content, String openid, String mpid) {
+        try {
+            String[] dialogue = content.split(":")[1].split("=");
+            redisService.hset(WeChatConstants.WECHAT_DIALOGUE,dialogue[0],dialogue[1]);
+            redisService.hset(WeChatConstants.WECHAT_DIALOGUE_TEM,dialogue[0],dialogue[1]);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return sendMessageService.sendMessageText(GlobalConstants.getProperties("msg_addDia"),openid,mpid);
+    }
+
+    @Override
+    public String getRobotNoReply(String content, String openid, String mpid) {
+        StringBuilder sbuilder = new StringBuilder("小吉同学识别的问题如下：\n");
+        try {
+            Map<String, String> replyMap = redisService.hgetAll(WeChatConstants.WECHAT_NO_REPLY);
+            replyMap.forEach((k, v) -> {
+                sbuilder.append(k+"\n");
+            });
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return sendMessageService.sendMessageText(sbuilder.toString(),openid,mpid);
     }
 
     public String filterNewsByKeyWorld(String content){

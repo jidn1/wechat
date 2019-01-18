@@ -1,5 +1,6 @@
 package com.jidn.wechat.quartz;
 
+import com.jidn.wechat.quartz.job.RedisTask;
 import com.jidn.wechat.quartz.job.RobotTask;
 import org.apache.log4j.Logger;
 
@@ -31,6 +32,15 @@ public class QuartzJob {
         try {
             RobotTask timer = new RobotTask();
             timer.Init_Dialogue();
+        } catch (Exception e) {
+            logger.error(e, e);
+        }
+    }
+
+    public void redis_clear_dia() {
+        try {
+            RedisTask timer = new RedisTask();
+            timer.clear_dia();
         } catch (Exception e) {
             logger.error(e, e);
         }

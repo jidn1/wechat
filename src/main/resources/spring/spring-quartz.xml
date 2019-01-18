@@ -61,7 +61,33 @@
         </property>
         <!-- cron 表达式-->
         <property name="cronExpression">
-            <value>0 0/1 * * * ?</value>
+            <value>0 10 0 * * ?</value>
+        </property>
+    </bean>
+
+
+    <!-- 定义调用对象和调用对象的方法 -->
+    <bean id="jobworkForDia"
+          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <!-- 调用的类 -->
+        <property name="targetObject">
+            <ref bean="quartzJob" />
+        </property>
+        <!-- 调用类中的方法 -->
+        <property name="targetMethod">
+            <value>redis_clear_dia</value>
+        </property>
+
+
+    </bean>
+    <!-- 定义触发时间 -->
+    <bean id="doTimeForDia" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail">
+            <ref bean="jobworkForDia" />
+        </property>
+        <!-- cron 表达式-->
+        <property name="cronExpression">
+            <value>0 0 1 * * ?</value>
         </property>
     </bean>
 
@@ -72,7 +98,8 @@
         <property name="triggers">
             <list>
                 <ref bean="doTimeForToken" />
-
+                <ref bean="doTimeForInit" />
+                <ref bean="doTimeForDia" />
             </list>
         </property>
     </bean>

@@ -33,6 +33,10 @@ public class MsgDispatcher {
             String content=map.get("Content");
             if(content.startsWith(WeChatConstants.SWITCH_MODE)){
                 return weChatService.switchModeLanguage(content,openid,mpid);
+            } else if(content.startsWith(WeChatConstants.WECHAT_ADD_TAKE)){
+                return weChatService.addRobotDialogue(content,openid,mpid);
+            } else if(content.equals(WeChatConstants.WECHAT_NO_REPLY_GET)){
+                return weChatService.getRobotNoReply(content,openid,mpid);
             } else {
                 if(StringUtils.isEmpty(defaultLan)){
                     return weChatService.sendMessageProcessing(content,openid,mpid);

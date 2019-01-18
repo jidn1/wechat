@@ -11,4 +11,8 @@ public interface WeChatService {
     public String switchModeLanguage(String content,String openid,String mpid);
 
     public String sendMessageProcessing(String content,String openid,String mpid);
+
+    public String addRobotDialogue(String content,String openid,String mpid);
+
+    public String getRobotNoReply(String content,String openid,String mpid);
 }
