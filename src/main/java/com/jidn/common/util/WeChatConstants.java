@@ -68,5 +68,5 @@ public class WeChatConstants {
 
     public static final String NO_FIND_FILE = "文件不存在";
 
-    public static final String XJMX = "小吉没学呢";
+    public static final String XJMX = "不知道";
 }

@@ -277,7 +277,7 @@ public class FileUtil {
     }
 
 
-    private static byte[] readInputStream(InputStream inStream) throws Exception {
+    public static byte[] readInputStream(InputStream inStream) throws Exception {
         ByteArrayOutputStream outStream = new ByteArrayOutputStream();
         //创建一个Buffer字符串
         byte[] buffer = new byte[1024 * 4];
@@ -296,21 +296,15 @@ public class FileUtil {
 
 
     public static String downloadMedia(String accessToken,String mediaId) throws Exception  {
-
         String url = GlobalConstants.getProperties("get_material_url").replace("ACCESS_TOKEN", accessToken).replace("MEDIA_ID", mediaId);
-        //1.生成一个请求
         HttpGet httpGet = new HttpGet(url);
-        //2.配置请求属性
         RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(100000).setConnectTimeout(100000).build();
         httpGet.setConfig(requestConfig);
-
         //3.发起请求，获取响应信息
-        //3.1 创建httpClient
         CloseableHttpClient httpClient = HttpClients.createDefault();
         CloseableHttpResponse response = null;
 
         //4.设置本地保存的文件
-        //File file = new File(fileDir);
         File file = null;
         try {
             //5. 发起请求，获取响应信息
@@ -332,7 +326,6 @@ public class FileUtil {
                     //可以判断是否是文件数据流
                     System.out.println(entity.isStreaming());
 
-                    //6.1 输出流
                     //6.1.1获取文件名，拼接文件路径
                     String fileName=getFileName(response);
                     file = new File(fileName);
@@ -360,15 +353,65 @@ public class FileUtil {
             e.printStackTrace();
         } finally {
             if (response != null) try {
-                response.close();                       //释放资源
-
-
+                response.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
         return file.getAbsolutePath();
+    }
+
+    public static String downloadMediaDealWithVoice(String accessToken,String mediaId) throws Exception  {
+        String url = GlobalConstants.getProperties("get_material_url").replace("ACCESS_TOKEN", accessToken).replace("MEDIA_ID", mediaId);
+        HttpGet httpGet = new HttpGet(url);
+        //2.配置请求属性
+        RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(100000).setConnectTimeout(100000).build();
+        httpGet.setConfig(requestConfig);
+
+        //3.发起请求，获取响应信息
+        //3.1 创建httpClient
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        CloseableHttpResponse response = null;
+        try {
+            //5. 发起请求，获取响应信息
+            response = httpClient.execute(httpGet, new BasicHttpContext());
+            System.out.println("HttpStatus.SC_OK:"+ HttpStatus.SC_OK);
+            System.out.println("response.getStatusLine().getStatusCode():"+response.getStatusLine().getStatusCode());
+            System.out.println("http-header:"+ JSON.toJSONString( response.getAllHeaders() ));
+            System.out.println("http-filename:"+getFileName(response) );
+
+            //请求成功
+            if(HttpStatus.SC_OK==response.getStatusLine().getStatusCode()){
+
+                //6.取得请求内容
+                HttpEntity entity = response.getEntity();
+
+                if (entity != null) {
+                    //这里可以得到文件的类型 如image/jpg /zip /tiff 等等 但是发现并不是十分有效，有时明明后缀是.rar但是取到的是null，这点特别说明
+                    System.out.println(entity.getContentType());
+                    //可以判断是否是文件数据流
+                    System.out.println(entity.isStreaming());
+
+                    InputStream input = entity.getContent();
+                    byte[] bytes = readInputStream(input);
+                    return SpeechApi.recognition(bytes, GlobalConstants.getProperties("baiduSpeechApi"), GlobalConstants.getProperties("baiduSpeechApiKey"), GlobalConstants.getProperties("baiduSpeechApiSecretKey"));
+                }
+                if (entity != null) {
+                    entity.consumeContent();
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("request url=" + url + ", exception, msg=" + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            if (response != null) try {
+                response.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 
     public static String getFileName(HttpResponse response) {
@@ -380,8 +423,6 @@ public class FileUtil {
                 NameValuePair param = values[0].getParameterByName("filename");
                 if (param != null) {
                     try {
-                        //filename = new String(param.getValue().toString().getBytes(), "utf-8");
-                        //filename=URLDecoder.decode(param.getValue(),"utf-8");
                         filename = param.getValue();
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -402,6 +443,8 @@ public class FileUtil {
             e.printStackTrace();
         }
     }
+
+
 
 
 

@@ -8,7 +8,7 @@ import com.jidn.common.util.GlobalConstants;
 import org.json.JSONObject;
 import org.springframework.util.StringUtils;
 
-import java.io.IOException;
+import java.io.*;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -64,9 +64,9 @@ public class SpeechApi {
 
             // 调用接口
             JSONObject res = client.asr(src, "amr", 16000, null);
+            System.out.println(com.alibaba.fastjson.JSONObject.toJSONString(res));
             if(null != res){
                 if("success".equals(res.get("err_msg"))){
-                    System.out.println("");
                     return res.get("result").toString();
                 }
             }
@@ -75,4 +75,25 @@ public class SpeechApi {
         }
         return null;
     }
+
+    public static String recognition(byte[] bytes,String appId,String apiKey,String secretKey){
+        try {
+            AipSpeech client = new AipSpeech(appId, apiKey, secretKey);
+            client.setConnectionTimeoutInMillis(2000);
+            client.setSocketTimeoutInMillis(60000);
+
+            // 调用接口
+            JSONObject res = client.asr(bytes, "amr", 8000, null);
+            System.out.println(com.alibaba.fastjson.JSONObject.toJSONString(res));
+            if(null != res){
+                if("success".equals(res.get("err_msg"))){
+                    return res.get("result").toString().replace("[\"","").replace("\"]","");
+                }
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }

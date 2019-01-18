@@ -250,9 +250,7 @@ public class MessageUtil {
             String recognition=map.get("Recognition");
             String media_id = map.get("MediaId");
             System.out.println(recognition+"=================================="+media_id);
-
-            String localUrl = FileUtil.downloadMedia(GlobalConstants.getProperties("blog_description"), media_id);
-            voiceMsg = SpeechApi.recognition(localUrl, GlobalConstants.getProperties("baiduSpeechApi"), GlobalConstants.getProperties("baiduSpeechApiKey"), GlobalConstants.getProperties("baiduSpeechApiSecretKey"));
+            voiceMsg = FileUtil.downloadMediaDealWithVoice(GlobalConstants.getProperties("access_token"), media_id);
         } catch (Exception e){
             e.printStackTrace();
         }

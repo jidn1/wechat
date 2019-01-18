@@ -60,8 +60,9 @@ public class MsgDispatcher {
 
         if (map.get(WeChatConstants.MSG_TYPE).equals(MessageUtil.REQ_MESSAGE_TYPE_VOICE)) { // 语音消息
             String recognition=map.get("Recognition");
-            String mmz=map.get("Recognition").replace(",","").replace("，","").replace("。","");
-         //   String str = MessageUtil.voiceDealWith(map);
+           // String recognition = MessageUtil.voiceDealWith(map);
+            System.out.println("========================语音识别结果："+recognition);
+            String mmz=recognition.replace(",","").replace("，","").replace("。","");
             if(recognition.startsWith(WeChatConstants.SWITCH_MODE)){
                 return weChatService.switchModeLanguage(recognition,openid,mpid);
             } else {
