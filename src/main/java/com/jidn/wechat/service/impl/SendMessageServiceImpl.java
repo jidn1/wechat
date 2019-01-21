@@ -239,7 +239,7 @@ public class SendMessageServiceImpl implements SendMessageService {
                 redisService.hset(WeChatConstants.WECHAT_NO_REPLY,fileContent,WeChatConstants.XJMX);
                 mediaId = redisService.hget(WeChatConstants.WECHAT_VOICE,WeChatConstants.XJMX);
             }
-            redisService.hset(WeChatConstants.WECHAT_VOICE,fileContent,mediaId);
+            //redisService.hset(WeChatConstants.WECHAT_VOICE,fileContent,mediaId);
         }catch (Exception e){
             e.printStackTrace();
         }
