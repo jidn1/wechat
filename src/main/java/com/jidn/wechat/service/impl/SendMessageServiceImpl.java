@@ -91,7 +91,7 @@ public class SendMessageServiceImpl implements SendMessageService {
         TextMessage txtMsg=new TextMessage();
         try {
             TransApi api = new TransApi(GlobalConstants.getProperties("baiduApi"), GlobalConstants.getProperties("baiduSecurityKey"));
-            String  content_result = api.getTransResult(content);
+            String  content_result = api.getTransResult(content,openid);
             char [] content_result_temp = content_result.toCharArray();
             content_result = "";
             for(int i = content_result_temp.length-5;;i--) {

@@ -53,7 +53,7 @@ public class WeChatServiceImpl implements WeChatService {
             } else {
                 toLan = "";
             }
-            redisService.save(WeChatConstants.DEFAULT_LANGUAGE,toLan,60*5);//切换语言默认时间为5分钟
+            redisService.save(WeChatConstants.DEFAULT_LANGUAGE+openid,toLan,60*5);//切换语言默认时间为5分钟
         }catch (Exception e){
             e.printStackTrace();
         }
