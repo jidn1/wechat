@@ -1,11 +1,14 @@
 package com.jidn.wechat.message.req;
 
+import lombok.Data;
+
 /**
  * @Copyright © 北京互融时代软件有限公司
  * @Author: Jidn
  * @Date: 2018/12/26 17:22
  * @Description:微信请求消息基本类
  */
+@Data
 public class BaseMessage {
 
     // 开发者微信号
@@ -19,43 +22,4 @@ public class BaseMessage {
     // 消息 id，64 位整型
     private long MsgId;
 
-    public String getToUserName() {
-        return ToUserName;
-    }
-
-    public void setToUserName(String toUserName) {
-        ToUserName = toUserName;
-    }
-
-    public String getFromUserName() {
-        return FromUserName;
-    }
-
-    public void setFromUserName(String fromUserName) {
-        FromUserName = fromUserName;
-    }
-
-    public long getCreateTime() {
-        return CreateTime;
-    }
-
-    public void setCreateTime(long createTime) {
-        CreateTime = createTime;
-    }
-
-    public String getMsgType() {
-        return MsgType;
-    }
-
-    public void setMsgType(String msgType) {
-        MsgType = msgType;
-    }
-
-    public long getMsgId() {
-        return MsgId;
-    }
-
-    public void setMsgId(long msgId) {
-        MsgId = msgId;
-    }
 }

@@ -1,11 +1,14 @@
 package com.jidn.wechat.message.resp;
 
+import lombok.Data;
+
 /**
  * @Copyright © 北京互融时代软件有限公司
  * @Author: Jidn
  * @Date: 2018/12/26 17:34
- * Description: 音乐消息消息体
+ * @Description: 音乐消息消息体
  */
+@Data
 public class Music {
     // 音乐名称
     private String Title;
@@ -18,43 +21,4 @@ public class Music {
 
     private String ThumbMediaId; //缩略图的媒体 id
 
-    public String getThumbMediaId() {
-        return ThumbMediaId;
-    }
-
-    public void setThumbMediaId(String thumbMediaId) {
-        ThumbMediaId = thumbMediaId;
-    }
-
-    public String getTitle() {
-        return Title;
-    }
-
-    public void setTitle(String title) {
-        Title = title;
-    }
-
-    public String getDescription() {
-        return Description;
-    }
-
-    public void setDescription(String description) {
-        Description = description;
-    }
-
-    public String getMusicUrl() {
-        return MusicUrl;
-    }
-
-    public void setMusicUrl(String musicUrl) {
-        MusicUrl = musicUrl;
-    }
-
-    public String getHQMusicUrl() {
-        return HQMusicUrl;
-    }
-
-    public void setHQMusicUrl(String musicUrl) {
-        HQMusicUrl = musicUrl;
-    }
 }

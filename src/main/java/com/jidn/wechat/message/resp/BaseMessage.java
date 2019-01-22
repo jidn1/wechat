@@ -1,11 +1,14 @@
 package com.jidn.wechat.message.resp;
 
+import lombok.Data;
+
 /**
  * @Copyright © 北京互融时代软件有限公司
  * @Author: Jidn
  * @Date: 2018/12/26 17:32
  * Description: 返回消息体-基本消息
  */
+@Data
 public class BaseMessage {
 
     // 接收方帐号（收到的 OpenID）
@@ -17,35 +20,4 @@ public class BaseMessage {
     // 消息类型（text/music/news）
     private String MsgType;
 
-    public String getToUserName() {
-        return ToUserName;
-    }
-
-    public void setToUserName(String toUserName) {
-        ToUserName = toUserName;
-    }
-
-    public String getFromUserName() {
-        return FromUserName;
-    }
-
-    public void setFromUserName(String fromUserName) {
-        FromUserName = fromUserName;
-    }
-
-    public long getCreateTime() {
-        return CreateTime;
-    }
-
-    public void setCreateTime(long createTime) {
-        CreateTime = createTime;
-    }
-
-    public String getMsgType() {
-        return MsgType;
-    }
-
-    public void setMsgType(String msgType) {
-        MsgType = msgType;
-    }
 }

@@ -1,11 +1,14 @@
 package com.jidn.wechat.message.req;
 
+import lombok.Data;
+
 /**
  * @Copyright © 北京互融时代软件有限公司
  * @Author: Jidn
  * @Date: 2018/12/26 17:23
  * @Description:连接消息
  */
+@Data
 public class LinkMessage extends BaseMessage{
 
     // 消息标题
@@ -15,27 +18,4 @@ public class LinkMessage extends BaseMessage{
     // 消息链接
     private String Url;
 
-    public String getTitle() {
-        return Title;
-    }
-
-    public void setTitle(String title) {
-        Title = title;
-    }
-
-    public String getDescription() {
-        return Description;
-    }
-
-    public void setDescription(String description) {
-        Description = description;
-    }
-
-    public String getUrl() {
-        return Url;
-    }
-
-    public void setUrl(String url) {
-        Url = url;
-    }
 }
