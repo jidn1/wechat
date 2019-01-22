@@ -3,13 +3,14 @@ package com.jidn.wechat.menu;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jidn.common.util.HttpUtils;
+import lombok.Data;
 
 
 /**
  * @Copyright © 北京互融时代软件有限公司
  * @Author: Jidn
  * @Date: 2018/12/29 16:00
- * Description:
+ * @Description:
  */
 public class MenuMain {
 
@@ -41,7 +42,6 @@ public class MenuMain {
         JSONObject menujson=new JSONObject();
         menujson.put("button", button);
         System.out.println(menujson);
-        //这里为请求接口的 url   +号后面的是 token，这里就不做过多对 token 获取的方法解释
         String url="https://api.weixin.qq.com/cgi-bin/menu/create?access_token=17_aRA4YyZZH6NBrCb-oYAvbR0KHGtJQ6CMVta3sqXdKYn1xtmy4m6KtoAul4qF9m3s38jHXlHFF5BmKp0Ogme5fu1f2ibbJ3zxZctLwGr4yLD5PYRpOs86t5rJ8QaNxsJ_BU7X6JGezsC5GZtULDPiADASKW";
 //        HashMap<String, String> params = new HashMap<String, String>();
 //        params.put("access_token",
