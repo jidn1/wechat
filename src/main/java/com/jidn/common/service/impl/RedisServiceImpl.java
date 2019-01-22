@@ -13,7 +13,7 @@ import java.util.Map;
  * @Copyright © 北京互融时代软件有限公司
  * @Author: Jidn
  * @Date: 2018/12/28 16:45
- * @Description:RedisServiceImpl
+ * @Description: RedisServiceImpl
  */
 public class RedisServiceImpl implements RedisService {
 

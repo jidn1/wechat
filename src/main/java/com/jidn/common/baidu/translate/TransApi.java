@@ -24,16 +24,16 @@ public class TransApi {
         this.securityKey = securityKey;
     }
 
-    public String getTransResult(String query) {
-        Map<String, String> params = buildParams(query, "auto");
+    public String getTransResult(String query,String openId) {
+        Map<String, String> params = buildParams(query, "auto",getLanguage(openId));
         return HttpUtils.get(TRANS_API_HOST, params);
     }
 
-    private Map<String, String> buildParams(String query, String from) {
+    private Map<String, String> buildParams(String query, String from,String to) {
         Map<String, String> params = new HashMap<String, String>();
         params.put("q", query);
         params.put("from", from);
-        params.put("to", getLanguage());
+        params.put("to", to);
         params.put("appid", appid);
         // 随机数
         String salt = String.valueOf(System.currentTimeMillis());
@@ -43,9 +43,9 @@ public class TransApi {
         return params;
     }
 
-    public String getLanguage(){
+    public String getLanguage(String openId){
         RedisService redisService = (RedisService) SpringUtil.getBean("redisService");
-        return redisService.get(WeChatConstants.DEFAULT_LANGUAGE);
+        return redisService.get(WeChatConstants.DEFAULT_LANGUAGE+openId);
     }
 
 }

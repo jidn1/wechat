@@ -2,7 +2,6 @@ package com.jidn.common.oss;
 
 import com.aliyun.oss.OSSClient;
 import com.jidn.common.util.GlobalConstants;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
