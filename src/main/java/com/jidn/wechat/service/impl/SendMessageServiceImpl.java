@@ -1,14 +1,13 @@
 package com.jidn.wechat.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.jidn.common.baidu.speech.SpeechApi;
 import com.jidn.common.baidu.translate.TransApi;
 import com.jidn.common.oss.OssUtil;
 import com.jidn.common.service.RedisService;
 import com.jidn.common.util.*;
 import com.jidn.web.model.News;
 import com.jidn.wechat.message.resp.*;
-import com.jidn.wechat.runable.SpeechUploadRunable;
 import com.jidn.wechat.service.SendMessageService;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -90,7 +89,7 @@ public class SendMessageServiceImpl implements SendMessageService {
     public String sendMessageTranslate(String content,String openid, String mpid) {
         TextMessage txtMsg=new TextMessage();
         try {
-            TransApi api = new TransApi(GlobalConstants.getProperties("baiduApi"), GlobalConstants.getProperties("baiduSecurityKey"));
+            TransApi api = new TransApi(GlobalConstants.getProperties("baiduTranApi"), GlobalConstants.getProperties("baiduTranSecurityKey"));
             String  content_result = api.getTransResult(content,openid);
             char [] content_result_temp = content_result.toCharArray();
             content_result = "";
@@ -221,25 +220,41 @@ public class SendMessageServiceImpl implements SendMessageService {
     public String getMediaIdByVoice(String content){
         content = content.replace(",","").replace("，","").replace("。","");
         String mediaId = redisService.hget(WeChatConstants.WECHAT_VOICE, content);
-        return mediaId;
+        if(!StringUtils.isEmpty(mediaId)){
+            JSONArray array = JSONObject.parseArray(mediaId);
+            Object randomOne = ListUtil.getRandomOne(array);
+            return randomOne.toString();
+        }
+        return null;
     }
 
     public String getRealTimeMediaId(String content){
         String mediaId = "";
+        List<String> mediaList = new ArrayList<String>();
         String urlFileName = "";
         String fileContent = content.replace(",","").replace("，","").replace("。","");
         try{
             urlFileName = redisService.hget(WeChatConstants.WECHAT_VOICE_FILE_PATH, fileContent);
             if(!StringUtils.isEmpty(urlFileName)){
-                String ossUrl = OssUtil.getUrl(urlFileName, true);
-                String localUrl = FileUtil.uploadOssVideo(ossUrl, urlFileName);
-                mediaId = FileUtil.WeChatUpload(localUrl,"voice");
-                FileUtil.delete(localUrl);
+                JSONArray array = JSONObject.parseArray(urlFileName);
+                array.forEach(urlFile ->{
+                    try {
+                        String ossUrl = OssUtil.getUrl(urlFile.toString(), true);
+                        String localUrl = FileUtil.uploadOssVideo(ossUrl, urlFile.toString());
+                        String media = FileUtil.WeChatUpload(localUrl,"voice");
+                        mediaList.add(media);
+                        FileUtil.delete(localUrl);
+                    } catch (Exception e){
+                        e.printStackTrace();
+                    }
+                });
+
+                mediaId = ListUtil.getRandomOne(mediaList);
+                redisService.hset(WeChatConstants.WECHAT_VOICE, content,JSONObject.toJSONString(mediaList));
             } else {
                 redisService.hset(WeChatConstants.WECHAT_NO_REPLY,fileContent,WeChatConstants.XJMX);
                 mediaId = redisService.hget(WeChatConstants.WECHAT_VOICE,WeChatConstants.XJMX);
             }
-            //redisService.hset(WeChatConstants.WECHAT_VOICE,fileContent,mediaId);
         }catch (Exception e){
             e.printStackTrace();
         }

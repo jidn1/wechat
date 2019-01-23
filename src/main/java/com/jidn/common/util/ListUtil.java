@@ -1,5 +1,7 @@
 package com.jidn.common.util;
 
+import com.alibaba.fastjson.JSONArray;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -13,9 +15,14 @@ import java.util.Random;
 public class ListUtil {
 
 
-    public static void getRandomOne(List<Object> lists) {
+    public static String getRandomOne(List<String> lists) {
         Random random = new Random();
-        lists.get(random.nextInt(lists.size()));
+        return lists.get(random.nextInt(lists.size()));
+    }
+
+    public static Object getRandomOne(JSONArray array) {
+        Random random = new Random();
+       return array.get(random.nextInt(array.size()));
     }
 
 

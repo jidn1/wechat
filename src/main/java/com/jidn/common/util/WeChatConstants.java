@@ -8,6 +8,8 @@ package com.jidn.common.util;
  */
 public class WeChatConstants {
 
+    public static final String MAP_ID = "gh_42d8b5e5bd3f";
+
     public static final String WECHAT_NEWS = "wechat:news";
 
     public static final String DEFAULT_LANGUAGE = "zjjWechat:defaultLanguage";//公众号默认语言

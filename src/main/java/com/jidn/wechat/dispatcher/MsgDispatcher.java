@@ -28,7 +28,7 @@ public class MsgDispatcher {
         String defaultLan = redisService.get(WeChatConstants.DEFAULT_LANGUAGE);
         String openid=map.get("FromUserName"); //用户 openid
         String mpid=map.get("ToUserName");   //公众号原始 ID
-
+        System.out.println("===============================openid:\t"+openid+"=======mpid:\t"+mpid);
         if (map.get(WeChatConstants.MSG_TYPE).equals(MessageUtil.REQ_MESSAGE_TYPE_TEXT)) { // 文本消息
             String content=map.get("Content");
             if(content.startsWith(WeChatConstants.SWITCH_MODE)){

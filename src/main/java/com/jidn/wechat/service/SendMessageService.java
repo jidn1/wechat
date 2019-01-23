@@ -71,4 +71,6 @@ public interface SendMessageService {
      */
     public String sendMessageTv(String content,String openid,String mpid);
 
+  //  public String
+
 }

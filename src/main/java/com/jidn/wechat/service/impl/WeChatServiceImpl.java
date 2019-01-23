@@ -1,19 +1,16 @@
 package com.jidn.wechat.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jidn.common.service.RedisService;
 import com.jidn.common.util.GlobalConstants;
 import com.jidn.common.util.WeChatConstants;
-import com.jidn.web.model.News;
-import com.jidn.wechat.message.resp.Article;
 import com.jidn.wechat.service.SendMessageService;
 import com.jidn.wechat.service.WeChatService;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-
 import javax.annotation.Resource;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @Copyright © 北京互融时代软件有限公司
@@ -80,10 +77,20 @@ public class WeChatServiceImpl implements WeChatService {
 
     @Override
     public String addRobotDialogue(String content, String openid, String mpid) {
+        List<String> diaList = new ArrayList<String>();
+        JSONArray array = new JSONArray();
         try {
             String[] dialogue = content.split(":")[1].split("=");
-            redisService.hset(WeChatConstants.WECHAT_DIALOGUE,dialogue[0],dialogue[1]);
-            redisService.hset(WeChatConstants.WECHAT_DIALOGUE_TEM,dialogue[0],dialogue[1]);
+            String ifHas = redisService.hget(WeChatConstants.WECHAT_DIALOGUE, dialogue[0]);
+            if(!StringUtils.isEmpty(ifHas)){
+                array = JSONObject.parseArray(ifHas);
+            }
+            String[] moreDia = dialogue[1].split(";");
+            for(String dia : moreDia){
+                array.add(dia);
+            }
+            redisService.hset(WeChatConstants.WECHAT_DIALOGUE,dialogue[0],JSONObject.toJSONString(array));
+            redisService.hset(WeChatConstants.WECHAT_DIALOGUE_TEM,dialogue[0],JSONObject.toJSONString(array));
         } catch (Exception e){
             e.printStackTrace();
         }
