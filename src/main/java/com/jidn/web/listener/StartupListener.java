@@ -26,17 +26,17 @@ public class StartupListener extends ContextLoaderListener {
             ScheduleJob RobotJob = new ScheduleJob();
             RobotJob.setBeanClass("com.jidn.wechat.quartzJob.WeChatTask");
             RobotJob.setMethodName("Init_Dialogue");
-            QuartzManager.addJob("RobotJob", RobotJob, QuartzJob.class, " 0 10 0 * * ?");
+            QuartzManager.addJob("RobotJob", RobotJob, QuartzJob.class, " 0 30 0 * * ?");
 
             ScheduleJob ClearRobotJob = new ScheduleJob();
             ClearRobotJob.setBeanClass("com.jidn.wechat.quartzJob.WeChatTask");
             ClearRobotJob.setMethodName("clear_dia");
             QuartzManager.addJob("ClearRobotJob", ClearRobotJob, QuartzJob.class, "0 0 1 * * ?");
 
-            ScheduleJob getUserOpenIdJob = new ScheduleJob();
-            getUserOpenIdJob.setBeanClass("com.jidn.wechat.quartzJob.WeChatTask");
-            getUserOpenIdJob.setMethodName("forward_Msg");
-            QuartzManager.addJob("getUserOpenIdJob", getUserOpenIdJob, QuartzJob.class, "0/10 * * * * ?");
+//            ScheduleJob InspectMediaIdJob = new ScheduleJob();
+//            InspectMediaIdJob.setBeanClass("com.jidn.wechat.quartzJob.WeChatTask");
+//            InspectMediaIdJob.setMethodName("inspect_mediaId");
+//            QuartzManager.addJob("InspectMediaIdJob", InspectMediaIdJob, QuartzJob.class, "0 30 1 * * ?");
 
 
 

@@ -12,13 +12,12 @@
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
-    <!-- 自动扫描(自动注入) -->
+    <!-- 自动扫描 controller 包下的所有类，使其认为 spring mvc 的控制器 -->
     <context:component-scan base-package="com.jidn.*.service,com.jidn.*.*.service" />
     <context:component-scan base-package="com.jidn.wechat.*" />
+    <context:component-scan base-package="com.jidn.web.*" />
 
-    <!-- 自动扫描 controller 包下的所有类，使其认为 spring mvc 的控制器 -->
-    <context:component-scan base-package="com.jidn.web.controller" />
-
+    <aop:aspectj-autoproxy />
 
     <mvc:annotation-driven>
         <mvc:message-converters>
@@ -58,5 +57,6 @@
         </property>
     </bean>
 
+    <aop:config></aop:config>
 
 </beans>

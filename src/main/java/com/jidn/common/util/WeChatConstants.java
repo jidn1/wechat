@@ -1,5 +1,7 @@
 package com.jidn.common.util;
 
+import java.math.BigDecimal;
+
 /**
  * @Copyright © 北京互融时代软件有限公司
  * @Author: Jidn
@@ -25,6 +27,10 @@ public class WeChatConstants {
     public static final String WECHAT_DIALOGUE_TEM = "wechat:dialoguetemp";//词库临时
 
     public static final String WECHAT_TV = "wechat:tv";
+
+    public static final String WECHAT_SAME = "wechat:same";
+
+    public static final String WECHAT_COUNT_MORE = "相同语音次数太多";
 
     public static final String SWITCH_MODE = "切换为";
 
@@ -77,4 +83,6 @@ public class WeChatConstants {
     public static final String NO_FIND_FILE = "文件不存在";
 
     public static final String XJMX = "不知道";
+
+    public static final BigDecimal SimilarRate = new BigDecimal(0.61);
 }

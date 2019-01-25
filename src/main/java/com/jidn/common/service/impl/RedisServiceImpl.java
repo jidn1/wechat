@@ -2,6 +2,7 @@ package com.jidn.common.service.impl;
 
 import com.jidn.common.service.RedisService;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.ShardedJedis;
 import redis.clients.jedis.ShardedJedisPool;
@@ -46,7 +47,9 @@ public class RedisServiceImpl implements RedisService {
         ShardedJedis jedis = null;
         try {
             jedis = getResource();
-            return jedis.set(key, value);
+            if(!StringUtils.isEmpty(value)){
+                return jedis.set(key, value);
+            }
         } catch (Exception e) {
             returnResource(this.pool, jedis);
             e.printStackTrace();
@@ -54,6 +57,7 @@ public class RedisServiceImpl implements RedisService {
         } finally {
             returnResource(this.pool, jedis);
         }
+        return null;
     }
 
     @Override
@@ -61,8 +65,10 @@ public class RedisServiceImpl implements RedisService {
         ShardedJedis jedis = null;
         try {
             jedis = getResource();
-            jedis.set(key,value);
-            jedis.expire(key,time);
+            if(!StringUtils.isEmpty(value)){
+                jedis.set(key,value);
+                jedis.expire(key,time);
+            }
         } catch (Exception e) {
             returnResource(this.pool, jedis);
             e.printStackTrace();
@@ -105,13 +111,14 @@ public class RedisServiceImpl implements RedisService {
     @Override
     public void saveMap(String paramString, Map<String, String> paramMap) {
         ShardedJedis jedis = null;
-        try
-        {
-            jedis = getResource();
-            jedis.hmset(paramString, paramMap);
-        }
-        catch (Exception e) {}finally
-        {
+        try{
+            if(null != null && paramMap.size() > 0){
+                jedis = getResource();
+                jedis.hmset(paramString, paramMap);
+            }
+        }catch (Exception e) {
+
+        }finally{
             returnResource(this.pool, jedis);
         }
     }
@@ -122,7 +129,9 @@ public class RedisServiceImpl implements RedisService {
         try
         {
             jedis = getResource();
-            jedis.hset(paramString1, paramString2, paramString3);
+            if(!StringUtils.isEmpty(paramString2) && !StringUtils.isEmpty(paramString3)){
+                jedis.hset(paramString1, paramString2, paramString3);
+            }
         }
         catch (Exception e) {}finally
         {

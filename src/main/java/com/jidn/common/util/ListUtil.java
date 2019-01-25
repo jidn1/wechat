@@ -17,11 +17,17 @@ public class ListUtil {
 
     public static String getRandomOne(List<String> lists) {
         Random random = new Random();
+        if(null == lists || lists.size() == 0){
+            return null;
+        }
         return lists.get(random.nextInt(lists.size()));
     }
 
     public static Object getRandomOne(JSONArray array) {
         Random random = new Random();
+        if(null == array || array.size() == 0){
+            return null;
+        }
        return array.get(random.nextInt(array.size()));
     }
 

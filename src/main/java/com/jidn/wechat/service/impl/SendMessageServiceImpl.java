@@ -2,6 +2,7 @@ package com.jidn.wechat.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.jidn.common.baidu.naturalLang.NaturlLangApi;
 import com.jidn.common.baidu.translate.TransApi;
 import com.jidn.common.oss.OssUtil;
 import com.jidn.common.service.RedisService;
@@ -11,8 +12,8 @@ import com.jidn.wechat.message.resp.*;
 import com.jidn.wechat.service.SendMessageService;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.*;
 
 
@@ -115,6 +116,7 @@ public class SendMessageServiceImpl implements SendMessageService {
     public String sendMessageVoice(String content,String openid, String mpid) {
         VoiceMessage voiceMsg = new VoiceMessage();
         try{
+            content = matchContent(content);
             String mediaId = getMediaIdByVoice(content);
             if(StringUtils.isEmpty(mediaId)){
                 mediaId = getRealTimeMediaId(content);
@@ -218,7 +220,6 @@ public class SendMessageServiceImpl implements SendMessageService {
     }
 
     public String getMediaIdByVoice(String content){
-        content = content.replace(",","").replace("，","").replace("。","");
         String mediaId = redisService.hget(WeChatConstants.WECHAT_VOICE, content);
         if(!StringUtils.isEmpty(mediaId)){
             JSONArray array = JSONObject.parseArray(mediaId);
@@ -232,33 +233,70 @@ public class SendMessageServiceImpl implements SendMessageService {
         String mediaId = "";
         List<String> mediaList = new ArrayList<String>();
         String urlFileName = "";
-        String fileContent = content.replace(",","").replace("，","").replace("。","");
         try{
-            urlFileName = redisService.hget(WeChatConstants.WECHAT_VOICE_FILE_PATH, fileContent);
+            urlFileName = redisService.hget(WeChatConstants.WECHAT_VOICE_FILE_PATH, content);
             if(!StringUtils.isEmpty(urlFileName)){
                 JSONArray array = JSONObject.parseArray(urlFileName);
-                array.forEach(urlFile ->{
+                for(Object urlFile : array){
                     try {
                         String ossUrl = OssUtil.getUrl(urlFile.toString(), true);
                         String localUrl = FileUtil.uploadOssVideo(ossUrl, urlFile.toString());
+                        System.out.println(localUrl);
                         String media = FileUtil.WeChatUpload(localUrl,"voice");
-                        mediaList.add(media);
+                        if(!StringUtils.isEmpty(media)){
+                            mediaList.add(media);
+                        }
                         FileUtil.delete(localUrl);
                     } catch (Exception e){
                         e.printStackTrace();
                     }
-                });
-
+                }
                 mediaId = ListUtil.getRandomOne(mediaList);
                 redisService.hset(WeChatConstants.WECHAT_VOICE, content,JSONObject.toJSONString(mediaList));
             } else {
-                redisService.hset(WeChatConstants.WECHAT_NO_REPLY,fileContent,WeChatConstants.XJMX);
+                redisService.hset(WeChatConstants.WECHAT_NO_REPLY,content,WeChatConstants.XJMX);
                 mediaId = redisService.hget(WeChatConstants.WECHAT_VOICE,WeChatConstants.XJMX);
             }
         }catch (Exception e){
             e.printStackTrace();
         }
         return mediaId;
+    }
+
+    public String matchContent(String content){
+        content = content.replace(",","").replace("，","").replace("。","");
+        try {
+            String mediaId = redisService.hget(WeChatConstants.WECHAT_VOICE, content);
+            if(StringUtils.isEmpty(mediaId)){
+                mediaId = redisService.hget(WeChatConstants.WECHAT_VOICE_FILE_PATH, content);
+            }
+            if(StringUtils.isEmpty(mediaId)) {
+                Map<String, String> mediaIdMap = redisService.hgetAll(WeChatConstants.WECHAT_VOICE);
+                Iterator<String> iter = mediaIdMap.keySet().iterator();
+                while (iter.hasNext()) {
+                    String redisKey = iter.next();
+                    BigDecimal SimilarRate = NaturlLangApi.SimilarTextNpl(redisKey, content);
+                    if(SimilarRate.compareTo(WeChatConstants.SimilarRate) >= 0){
+                        return redisKey;
+                    }
+                }
+
+                Map<String, String> voicePathMap = redisService.hgetAll(WeChatConstants.WECHAT_VOICE_FILE_PATH);
+                Iterator<String> voiIter = voicePathMap.keySet().iterator();
+                while (voiIter.hasNext()) {
+                    String redisKey = voiIter.next();
+                    BigDecimal SimilarRate = NaturlLangApi.SimilarTextNpl(redisKey, content);
+                    if(SimilarRate.compareTo(WeChatConstants.SimilarRate) >= 0){
+                        return redisKey;
+                    }
+                }
+            } else {
+               return content;
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

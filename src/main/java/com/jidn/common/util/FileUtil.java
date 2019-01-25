@@ -84,11 +84,11 @@ public class FileUtil {
         try {
             //上传流
             InputStream ossStream = new ByteArrayInputStream(bfile);
-            OssUtil.upload(ossStream, fileName,true);
+            OssUtil.upload(ossStream, filePath+"/"+fileName,true);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return fileName;
+        return filePath+"/"+fileName;
     }
 
     public static String WeChatVoiceToOss(InputStream inputStream, String filePath) {
@@ -245,6 +245,7 @@ public class FileUtil {
 
 
     public static String uploadOssVideo(String imgPath,String fileName) throws Exception {
+        fileName = fileName.replace(GlobalConstants.getProperties("WRITE_FILE_SYSTEM")+"/","");
         URL url = new URL(imgPath);
         //打开链接
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -313,7 +314,9 @@ public class FileUtil {
             System.out.println("response.getStatusLine().getStatusCode():"+response.getStatusLine().getStatusCode());
             System.out.println("http-header:"+ JSON.toJSONString( response.getAllHeaders() ));
             System.out.println("http-filename:"+getFileName(response) );
-
+            if(getFileName(response) == null){
+                return "false";
+            }
             //请求成功
             if(HttpStatus.SC_OK==response.getStatusLine().getStatusCode()){
 
@@ -412,6 +415,42 @@ public class FileUtil {
             }
         }
         return null;
+    }
+
+    public static boolean ifHasExitMediaId(String accessToken,String mediaId) throws Exception  {
+        boolean flag = false;
+        String url = GlobalConstants.getProperties("get_material_url").replace("ACCESS_TOKEN", accessToken).replace("MEDIA_ID", mediaId);
+        HttpGet httpGet = new HttpGet(url);
+        RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(100000).setConnectTimeout(100000).build();
+        httpGet.setConfig(requestConfig);
+        //3.发起请求，获取响应信息
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        CloseableHttpResponse response = null;
+
+        //4.设置本地保存的文件
+        File file = null;
+        try {
+            //5. 发起请求，获取响应信息
+            response = httpClient.execute(httpGet, new BasicHttpContext());
+            System.out.println("HttpStatus.SC_OK:"+ HttpStatus.SC_OK);
+            System.out.println("response.getStatusLine().getStatusCode():"+response.getStatusLine().getStatusCode());
+            System.out.println("http-header:"+ JSON.toJSONString( response.getAllHeaders() ));
+            System.out.println("http-filename:"+getFileName(response) );
+            if(getFileName(response) != null){
+                flag = true;
+            }
+        } catch (IOException e) {
+            System.out.println("request url=" + url + ", exception, msg=" + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            if (response != null) try {
+                response.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return flag;
     }
 
     public static String getFileName(HttpResponse response) {

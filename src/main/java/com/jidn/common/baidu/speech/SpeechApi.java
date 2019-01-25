@@ -34,7 +34,7 @@ public class SpeechApi {
         client.setSocketTimeoutInMillis(60000);
         HashMap<String, Object> options = new HashMap<String, Object>();
         options.put("spd", "5");//语速，取值0-9，默认为5中语速      非必选
-        options.put("pit", "8");//音调，取值0-9，默认为5中语调      非必选
+        options.put("pit", "6");//音调，取值0-9，默认为5中语调      非必选
         options.put("per", "4");//发音人选择, 0为女声，1为男声，3为情感合成-度逍遥，4为情感合成-度丫丫，默认为普通女 非必选
         TtsResponse res = client.synthesis(str, "zh", 1, options);
         JSONObject result = res.getResult();

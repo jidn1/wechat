@@ -60,6 +60,7 @@ public class WeChatServiceImpl implements WeChatService {
     @Override
     public String sendMessageProcessing(String content, String openid, String mpid) {
         try{
+            System.out.println("================================="+content);
             String newsContent = filterNewsByKeyWorld(content);
             String tvContent = redisService.hget(WeChatConstants.WECHAT_TV, content);
             if(!StringUtils.isEmpty(newsContent)){
@@ -99,7 +100,7 @@ public class WeChatServiceImpl implements WeChatService {
 
     @Override
     public String getRobotNoReply(String content, String openid, String mpid) {
-        StringBuilder sbuilder = new StringBuilder("小吉同学识别的问题如下：\n");
+        StringBuilder sbuilder = new StringBuilder("小吉同学未识别的问题如下：\n");
         try {
             Map<String, String> replyMap = redisService.hgetAll(WeChatConstants.WECHAT_NO_REPLY);
             replyMap.forEach((k, v) -> {
