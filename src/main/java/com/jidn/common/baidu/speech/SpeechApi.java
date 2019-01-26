@@ -63,7 +63,7 @@ public class SpeechApi {
             client.setSocketTimeoutInMillis(60000);
 
             // 调用接口
-            JSONObject res = client.asr(src, "amr", 16000, null);
+            JSONObject res = client.asr(src, "amr", 8000, null);
             System.out.println(com.alibaba.fastjson.JSONObject.toJSONString(res));
             if(null != res){
                 if("success".equals(res.get("err_msg"))){

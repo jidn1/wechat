@@ -3,6 +3,7 @@ package com.jidn.common.baidu.naturalLang;
 import com.baidu.aip.nlp.AipNlp;
 import com.jidn.common.util.GlobalConstants;
 import org.json.JSONObject;
+import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -36,8 +37,14 @@ public class NaturlLangApi {
                 client.setSocketTimeoutInMillis(60000);
                 //默认为"BOW"，可选"BOW"、"CNN"与"GRNN"
                 options.put("model", "CNN");
+                System.out.println(redisKey+"=============="+MsgKey);
                 JSONObject res = client.simnet(redisKey, MsgKey, options);
-                score = res.get("score").toString();
+                System.out.println(res.toString());
+                if(StringUtils.isEmpty(res.toString().contains("score"))){
+                    score = res.get("score").toString();
+                } else {
+                    score = "0";
+                }
                 System.out.println("================【使用baidu NPL自然语言处理文本匹配度为:"+score+"】======================");
             } catch (Exception e){
                 e.printStackTrace();
