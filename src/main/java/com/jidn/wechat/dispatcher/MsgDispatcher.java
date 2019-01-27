@@ -38,7 +38,7 @@ public class MsgDispatcher {
                 return weChatService.getRobotNoReply(content,openid,mpid);
             } else {
                 if(StringUtils.isEmpty(defaultLan)){
-                    //return sendMessageService.sendMessageVoice(content,openid,mpid);
+                   // return sendMessageService.sendMessageVoice(content,openid,mpid);
                     return weChatService.sendMessageProcessing(content,openid,mpid);
                 } else {
                     return sendMessageService.sendMessageTranslate(content,openid,mpid);

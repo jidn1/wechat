@@ -40,11 +40,12 @@ public class NaturlLangApi {
                 System.out.println(redisKey+"=============="+MsgKey);
                 JSONObject res = client.simnet(redisKey, MsgKey, options);
                 System.out.println(res.toString());
-                if(StringUtils.isEmpty(res.toString().contains("score"))){
+                if(res.toString().contains("score")){
                     score = res.get("score").toString();
                 } else {
                     score = "0";
                 }
+
                 System.out.println("================【使用baidu NPL自然语言处理文本匹配度为:"+score+"】======================");
             } catch (Exception e){
                 e.printStackTrace();

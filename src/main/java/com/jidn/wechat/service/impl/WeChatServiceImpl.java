@@ -2,6 +2,7 @@ package com.jidn.wechat.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.jidn.common.baidu.naturalLang.NaturlLangApi;
 import com.jidn.common.service.RedisService;
 import com.jidn.common.util.GlobalConstants;
 import com.jidn.common.util.WeChatConstants;
@@ -10,6 +11,7 @@ import com.jidn.wechat.service.WeChatService;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -67,6 +69,8 @@ public class WeChatServiceImpl implements WeChatService {
               return sendMessageService.sendMessageNews(content,openid,mpid);
             } else if(!StringUtils.isEmpty(tvContent)){
                 return sendMessageService.sendMessageTv(content,openid,mpid);
+            } else if(!StringUtils.isEmpty(matchContent(content))){
+                return sendMessageService.sendMessageVoice(content,openid,mpid);
             } else {
                 return sendMessageService.sendMessageText(GlobalConstants.getProperties("msg_text_error"),openid,mpid);
             }
@@ -124,6 +128,42 @@ public class WeChatServiceImpl implements WeChatService {
                 return redisService.hget(WeChatConstants.WECHAT_NEWS, WeChatConstants.REDIS_NEW_SPORT);
             } else if(WeChatConstants.HOT_SPOT.equals(content)){//热点
                 return redisService.hget(WeChatConstants.WECHAT_NEWS, WeChatConstants.REDIS_NEW_HOT_SPORT);
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public String matchContent(String content){
+        content = content.replace(",","").replace("，","").replace("。","");
+        try {
+            String mediaId = redisService.hget(WeChatConstants.WECHAT_VOICE, content);
+            if(StringUtils.isEmpty(mediaId)){
+                mediaId = redisService.hget(WeChatConstants.WECHAT_VOICE_FILE_PATH, content);
+            }
+            if(StringUtils.isEmpty(mediaId)) {
+                Map<String, String> mediaIdMap = redisService.hgetAll(WeChatConstants.WECHAT_VOICE);
+                Iterator<String> iter = mediaIdMap.keySet().iterator();
+                while (iter.hasNext()) {
+                    String redisKey = iter.next();
+                    BigDecimal SimilarRate = NaturlLangApi.SimilarTextNpl(redisKey, content);
+                    if(SimilarRate.compareTo(WeChatConstants.SimilarRate) >= 0){
+                        return redisKey;
+                    }
+                }
+
+                Map<String, String> voicePathMap = redisService.hgetAll(WeChatConstants.WECHAT_VOICE_FILE_PATH);
+                Iterator<String> voiIter = voicePathMap.keySet().iterator();
+                while (voiIter.hasNext()) {
+                    String redisKey = voiIter.next();
+                    BigDecimal SimilarRate = NaturlLangApi.SimilarTextNpl(redisKey, content);
+                    if(SimilarRate.compareTo(WeChatConstants.SimilarRate) >= 0){
+                        return redisKey;
+                    }
+                }
+            } else {
+                return content;
             }
         } catch (Exception e){
             e.printStackTrace();
