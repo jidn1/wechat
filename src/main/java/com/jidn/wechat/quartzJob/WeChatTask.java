@@ -106,6 +106,7 @@ public class WeChatTask {
                 for(Object obj : mediaArray){
                     try {
                         boolean exitMediaId = FileUtil.ifHasExitMediaId(GlobalConstants.getProperties("access_token"), obj.toString());
+                        System.out.println("检查素材是否存在=====================【"+obj.toString()+"】==============【exitMediaId："+exitMediaId+"】===");
                         if(!exitMediaId){
                             redisService.hdel(WeChatConstants.WECHAT_VOICE,entry.getKey());
                             return;

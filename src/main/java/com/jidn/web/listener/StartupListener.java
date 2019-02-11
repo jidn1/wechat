@@ -33,10 +33,10 @@ public class StartupListener extends ContextLoaderListener {
             ClearRobotJob.setMethodName("clear_dia");
             QuartzManager.addJob("ClearRobotJob", ClearRobotJob, QuartzJob.class, "0 0 1 * * ?");
 
-//            ScheduleJob InspectMediaIdJob = new ScheduleJob();
-//            InspectMediaIdJob.setBeanClass("com.jidn.wechat.quartzJob.WeChatTask");
-//            InspectMediaIdJob.setMethodName("inspect_mediaId");
-//            QuartzManager.addJob("InspectMediaIdJob", InspectMediaIdJob, QuartzJob.class, "0 30 1 * * ?");
+            ScheduleJob InspectMediaIdJob = new ScheduleJob();
+            InspectMediaIdJob.setBeanClass("com.jidn.wechat.quartzJob.WeChatTask");
+            InspectMediaIdJob.setMethodName("inspect_mediaId");
+            QuartzManager.addJob("InspectMediaIdJob", InspectMediaIdJob, QuartzJob.class, "0 30 1 * * ?");
 
 
 
