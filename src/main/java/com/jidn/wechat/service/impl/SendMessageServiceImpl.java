@@ -117,10 +117,12 @@ public class SendMessageServiceImpl implements SendMessageService {
         VoiceMessage voiceMsg = new VoiceMessage();
         try{
             content = matchContent(content);
+            System.out.println("SendMessageServiceImpl 语音发送处理==============content:"+content);
             String mediaId = getMediaIdByVoice(content);
             if(StringUtils.isEmpty(mediaId)){
                 mediaId = getRealTimeMediaId(content);
             }
+            System.out.println("SendMessageServiceImpl 语音发送处理==============mediaId:"+mediaId);
             Voice v = new Voice();
             voiceMsg.setToUserName(openid);
             voiceMsg.setFromUserName(mpid);
@@ -175,31 +177,39 @@ public class SendMessageServiceImpl implements SendMessageService {
     public Article filterNewsByKeyWorld(String content){
         Article article = new Article();
         try{
-            if(WeChatConstants.ENTERTAINMENT.equals(content)){//娱乐
-                String NewEntertainment = redisService.hget(WeChatConstants.WECHAT_NEWS, WeChatConstants.REDIS_NEW_ENTERTAINMENT);
-                List<News> news = JSONObject.parseArray(NewEntertainment, News.class);
-                article = getRandomArticle(news);
-            } else if(WeChatConstants.FINANCE.equals(content)){//财经
-                String NewEntertainment = redisService.hget(WeChatConstants.WECHAT_NEWS, WeChatConstants.REDIS_NEW_FINANCE);
-                List<News> news = JSONObject.parseArray(NewEntertainment, News.class);
-                article = getRandomArticle(news);
-            } else if(WeChatConstants.MILITARY.equals(content)){//军事
-                String NewEntertainment = redisService.hget(WeChatConstants.WECHAT_NEWS, WeChatConstants.REDIS_NEW_MILITARY);
-                List<News> news = JSONObject.parseArray(NewEntertainment, News.class);
-                article = getRandomArticle(news);
-            } else if(WeChatConstants.SPORT.equals(content)){//体育
-                String NewEntertainment = redisService.hget(WeChatConstants.WECHAT_NEWS, WeChatConstants.REDIS_NEW_SPORT);
-                List<News> news = JSONObject.parseArray(NewEntertainment, News.class);
-                article = getRandomArticle(news);
-            } else if(WeChatConstants.HOT_SPOT.equals(content)){//热点
-                String NewEntertainment = redisService.hget(WeChatConstants.WECHAT_NEWS, WeChatConstants.REDIS_NEW_HOT_SPORT);
-                List<News> news = JSONObject.parseArray(NewEntertainment, News.class);
-                article = getRandomArticle(news);
-            } else {//博客
-                article.setTitle(GlobalConstants.getProperties("blog_name"));
-                article.setPicUrl(GlobalConstants.getProperties("blog_img"));
-                article.setDescription(GlobalConstants.getProperties("blog_description")); //图文消息的描述
-                article.setUrl(GlobalConstants.getProperties("blog_url"));  //图文 url 链接
+            String NewEntertainment = "";
+            List<News> news = null;
+            switch (content){
+                case WeChatConstants.ENTERTAINMENT:
+                    NewEntertainment = redisService.hget(WeChatConstants.WECHAT_NEWS, WeChatConstants.REDIS_NEW_ENTERTAINMENT);
+                    news = JSONObject.parseArray(NewEntertainment, News.class);
+                    article = getRandomArticle(news);
+                    break;
+                case WeChatConstants.FINANCE:
+                    NewEntertainment = redisService.hget(WeChatConstants.WECHAT_NEWS, WeChatConstants.REDIS_NEW_FINANCE);
+                    news = JSONObject.parseArray(NewEntertainment, News.class);
+                    article = getRandomArticle(news);
+                    break;
+                case WeChatConstants.MILITARY:
+                    NewEntertainment = redisService.hget(WeChatConstants.WECHAT_NEWS, WeChatConstants.REDIS_NEW_MILITARY);
+                    news = JSONObject.parseArray(NewEntertainment, News.class);
+                    article = getRandomArticle(news);
+                    break;
+                case WeChatConstants.SPORT:
+                    NewEntertainment = redisService.hget(WeChatConstants.WECHAT_NEWS, WeChatConstants.REDIS_NEW_SPORT);
+                    news = JSONObject.parseArray(NewEntertainment, News.class);
+                    article = getRandomArticle(news);
+                    break;
+                case WeChatConstants.HOT_SPOT:
+                    NewEntertainment = redisService.hget(WeChatConstants.WECHAT_NEWS, WeChatConstants.REDIS_NEW_HOT_SPORT);
+                    news = JSONObject.parseArray(NewEntertainment, News.class);
+                    article = getRandomArticle(news);
+                    break;
+                default:
+                    article.setTitle(GlobalConstants.getProperties("blog_name"));
+                    article.setPicUrl(GlobalConstants.getProperties("blog_img"));
+                    article.setDescription(GlobalConstants.getProperties("blog_description")); //图文消息的描述
+                    article.setUrl(GlobalConstants.getProperties("blog_url"));  //图文 url 链接
             }
         } catch (Exception e){
             e.printStackTrace();
@@ -220,11 +230,15 @@ public class SendMessageServiceImpl implements SendMessageService {
     }
 
     public String getMediaIdByVoice(String content){
-        String mediaId = redisService.hget(WeChatConstants.WECHAT_VOICE, content);
-        if(!StringUtils.isEmpty(mediaId)){
-            JSONArray array = JSONObject.parseArray(mediaId);
-            Object randomOne = ListUtil.getRandomOne(array);
-            return randomOne.toString();
+        try {
+            String mediaId = redisService.hget(WeChatConstants.WECHAT_VOICE, content);
+            if(!StringUtils.isEmpty(mediaId)){
+                JSONArray array = JSONObject.parseArray(mediaId);
+                Object randomOne = ListUtil.getRandomOne(array);
+                return randomOne.toString();
+            }
+        } catch (Exception e){
+            e.printStackTrace();
         }
         return null;
     }

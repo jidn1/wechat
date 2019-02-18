@@ -70,6 +70,7 @@ public class WeChatServiceImpl implements WeChatService {
             } else if(!StringUtils.isEmpty(tvContent)){
                 return sendMessageService.sendMessageTv(content,openid,mpid);
             } else if(!StringUtils.isEmpty(matchContent(content))){
+                System.out.println("=================================进入语音合成");
                 return sendMessageService.sendMessageVoice(content,openid,mpid);
             } else {
                 return sendMessageService.sendMessageText(GlobalConstants.getProperties("msg_text_error"),openid,mpid);
@@ -118,16 +119,17 @@ public class WeChatServiceImpl implements WeChatService {
 
     public String filterNewsByKeyWorld(String content){
         try{
-            if(WeChatConstants.ENTERTAINMENT.equals(content)){//娱乐
-                return redisService.hget(WeChatConstants.WECHAT_NEWS, WeChatConstants.REDIS_NEW_ENTERTAINMENT);
-            } else if(WeChatConstants.FINANCE.equals(content)){//财经
-                return redisService.hget(WeChatConstants.WECHAT_NEWS, WeChatConstants.REDIS_NEW_FINANCE);
-            } else if(WeChatConstants.MILITARY.equals(content)){//军事
-                return redisService.hget(WeChatConstants.WECHAT_NEWS, WeChatConstants.REDIS_NEW_MILITARY);
-            } else if(WeChatConstants.SPORT.equals(content)){//体育
-                return redisService.hget(WeChatConstants.WECHAT_NEWS, WeChatConstants.REDIS_NEW_SPORT);
-            } else if(WeChatConstants.HOT_SPOT.equals(content)){//热点
-                return redisService.hget(WeChatConstants.WECHAT_NEWS, WeChatConstants.REDIS_NEW_HOT_SPORT);
+            switch (content){
+                case WeChatConstants.ENTERTAINMENT:
+                    return redisService.hget(WeChatConstants.WECHAT_NEWS, WeChatConstants.REDIS_NEW_ENTERTAINMENT);
+                case WeChatConstants.FINANCE:
+                    return redisService.hget(WeChatConstants.WECHAT_NEWS, WeChatConstants.REDIS_NEW_FINANCE);
+                case WeChatConstants.MILITARY:
+                    return redisService.hget(WeChatConstants.WECHAT_NEWS, WeChatConstants.REDIS_NEW_MILITARY);
+                case WeChatConstants.SPORT:
+                    return redisService.hget(WeChatConstants.WECHAT_NEWS, WeChatConstants.REDIS_NEW_SPORT);
+                case WeChatConstants.HOT_SPOT:
+                    return redisService.hget(WeChatConstants.WECHAT_NEWS, WeChatConstants.REDIS_NEW_HOT_SPORT);
             }
         } catch (Exception e){
             e.printStackTrace();
@@ -138,6 +140,7 @@ public class WeChatServiceImpl implements WeChatService {
     public String matchContent(String content){
         content = content.replace(",","").replace("，","").replace("。","");
         try {
+            System.out.println("==============进入npl 自然语言匹配============");
             String mediaId = redisService.hget(WeChatConstants.WECHAT_VOICE, content);
             if(StringUtils.isEmpty(mediaId)){
                 mediaId = redisService.hget(WeChatConstants.WECHAT_VOICE_FILE_PATH, content);
@@ -145,6 +148,7 @@ public class WeChatServiceImpl implements WeChatService {
             if(StringUtils.isEmpty(mediaId)) {
                 Map<String, String> mediaIdMap = redisService.hgetAll(WeChatConstants.WECHAT_VOICE);
                 Iterator<String> iter = mediaIdMap.keySet().iterator();
+                System.out.println("==============进入npl 进入循环之前============");
                 while (iter.hasNext()) {
                     String redisKey = iter.next();
                     BigDecimal SimilarRate = NaturlLangApi.SimilarTextNpl(redisKey, content);
@@ -152,9 +156,11 @@ public class WeChatServiceImpl implements WeChatService {
                         return redisKey;
                     }
                 }
+                System.out.println("==============进入npl 循环匹配结束============");
 
                 Map<String, String> voicePathMap = redisService.hgetAll(WeChatConstants.WECHAT_VOICE_FILE_PATH);
                 Iterator<String> voiIter = voicePathMap.keySet().iterator();
+                System.out.println("==============进入npl 匹配oss路劲循环之前===========");
                 while (voiIter.hasNext()) {
                     String redisKey = voiIter.next();
                     BigDecimal SimilarRate = NaturlLangApi.SimilarTextNpl(redisKey, content);
@@ -162,6 +168,7 @@ public class WeChatServiceImpl implements WeChatService {
                         return redisKey;
                     }
                 }
+                System.out.println("==============进入npl Oss匹配循环结束===========");
             } else {
                 return content;
             }
