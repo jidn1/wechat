@@ -9,7 +9,7 @@ import com.jidn.common.util.MessageUtil;
 import org.apache.log4j.Logger;
 
 /**
- * @Copyright © 北京互融时代软件有限公司
+ * @Copyright © 正经吉
  * @Author: Jidn
  * @Date: 2018/12/27 10:55
  * @Description:事件消息业务分发器

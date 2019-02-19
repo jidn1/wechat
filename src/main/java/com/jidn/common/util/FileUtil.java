@@ -33,7 +33,7 @@ import java.io.*;
 
 
 /**
- * @Copyright © 北京互融时代软件有限公司
+ * @Copyright © 正经吉
  * @Author: Jidn
  * @Date: 2019/1/14 17:24
  * Description: 文件上传工具类

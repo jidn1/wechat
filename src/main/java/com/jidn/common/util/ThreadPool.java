@@ -4,7 +4,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * @Copyright © 北京互融时代软件有限公司
+ * @Copyright © 正经吉
  * @Author: Jidn
  * @Date: 2019/1/15 10:31
  * @Description: 线程池

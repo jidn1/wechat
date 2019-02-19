@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 
 /**
- * @Copyright © 北京互融时代软件有限公司
+ * @Copyright © 正经吉
  * @Author: Jidn
  * @Date: 2019/1/23 10:22
  * @Description: baidu npl

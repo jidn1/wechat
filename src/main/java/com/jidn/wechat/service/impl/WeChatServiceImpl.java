@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 import java.util.*;
 
 /**
- * @Copyright © 北京互融时代软件有限公司
+ * @Copyright © 正经吉
  * @Author: Jidn
  * @Date: 2019/1/14 19:52
  * @Description:

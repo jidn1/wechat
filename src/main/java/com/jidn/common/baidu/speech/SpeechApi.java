@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 /**
- * @Copyright © 北京互融时代软件有限公司
+ * @Copyright © 正经吉
  * @Author: Jidn
  * @Date: 2019/1/14 16:43
  * @Description: AipSpeech是语音识别的Java客户端

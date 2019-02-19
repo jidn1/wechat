@@ -11,7 +11,7 @@ import org.springframework.util.StringUtils;
 import java.util.Map;
 
 /**
- * @Copyright © 北京互融时代软件有限公司
+ * @Copyright © 正经吉
  * @Author: Jidn
  * @Date: 2018/12/26 17:27
  * @Description:消息业务处理分发器

@@ -3,7 +3,7 @@ package com.jidn.common.service;
 import java.util.Map;
 
 /**
- * @Copyright © 北京互融时代软件有限公司
+ * @Copyright © 正经吉
  * @Author: Jidn
  * @Date: 2018/12/28 16:23
  * @Description:

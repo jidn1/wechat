@@ -4,7 +4,7 @@ import javax.servlet.*;
 import java.io.IOException;
 
 /**
- * @Copyright © 北京互融时代软件有限公司
+ * @Copyright © 正经吉
  * @Author: Jidn
  * @Date: 2019/1/22 15:27
  * @Description: 微信过滤

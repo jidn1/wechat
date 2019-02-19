@@ -8,7 +8,7 @@ import org.springframework.web.context.ContextLoaderListener;
 import javax.servlet.ServletContextEvent;
 
 /**
- * @Copyright © 北京互融时代软件有限公司
+ * @Copyright © 正经吉
  * @Author: Jidn
  * @Date: 2019/1/22 10:46
  * @Description: 全局监听器

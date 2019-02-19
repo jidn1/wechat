@@ -1,7 +1,7 @@
 package com.jidn.common.util;
 
 /**
- * @Copyright © 北京互融时代软件有限公司
+ * @Copyright © 正经吉
  * @Author: Jidn
  * @Date: 2019/1/11 14:45
  * @Description: Native和Ascii转换工具类

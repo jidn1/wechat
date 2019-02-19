@@ -3,7 +3,7 @@ package com.jidn.common.util;
 import java.math.BigDecimal;
 
 /**
- * @Copyright © 北京互融时代软件有限公司
+ * @Copyright © 正经吉
  * @Author: Jidn
  * @Date: 2018/12/27 15:56
  * @Description:常量类
